@@ -61,12 +61,12 @@ namespace Raster is
                 let xs =
                     (0..points.count)
                         |> map(at => _to_pixel_x(points[at].x, points[at].y))
-                        |> collect_array()
+                        |> collect()
 
                 let ys =
                     (0..points.count)
                         |> map(at => _to_pixel_y(points[at].x, points[at].y))
-                        |> collect_array()
+                        |> collect()
 
                 let first =
                     if points.count < 3 then height else _clamp(ys |> reduce(ys[0], _least), 0, height) fi
@@ -80,11 +80,11 @@ namespace Raster is
                 bottom = Math.max(bottom, last)
             od
 
-            let coverage = (0..width) |> map(_ => 0.0D) |> collect_list()
-            let total = (0..width) |> map(_ => 0.0D) |> collect_list()
-            let red = (0..width) |> map(_ => 0.0D) |> collect_list()
-            let green = (0..width) |> map(_ => 0.0D) |> collect_list()
-            let blue = (0..width) |> map(_ => 0.0D) |> collect_list()
+            let coverage = (0..width) |> map(_ => 0.0D) |> collect_mutable()
+            let total = (0..width) |> map(_ => 0.0D) |> collect_mutable()
+            let red = (0..width) |> map(_ => 0.0D) |> collect_mutable()
+            let green = (0..width) |> map(_ => 0.0D) |> collect_mutable()
+            let blue = (0..width) |> map(_ => 0.0D) |> collect_mutable()
 
             for y in top..bottom do
                 let row_first mut = width

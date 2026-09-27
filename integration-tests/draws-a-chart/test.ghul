@@ -17,7 +17,7 @@ let axes = AXES(image)
 
 axes.x_title = "leading digit"
 axes.y_title = "share"
-axes.x_ticks((1::9) |> map(digit => (value = cast double(digit), label = "{digit}")) |> collect_list())
+axes.x_ticks((1::9) |> map(digit => (value = cast double(digit), label = "{digit}")) |> collect_mutable())
 axes.key("counted", 90ub, 120ub, 200ub)
 axes.key("Benford", 200ub, 60ub, 60ub)
 axes.fit(0.5D, -0.02D, 9.5D, 0.32D)

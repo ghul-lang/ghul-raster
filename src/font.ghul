@@ -84,7 +84,7 @@ namespace Raster is
                 while index + 1 < body.length do
                     if body[index] == ' ' then
                         if stroke.count > 0 then
-                            strokes.add(stroke |> collect_list())
+                            strokes.add(stroke |> collect_mutable())
 
                             stroke.clear()
                         fi
@@ -99,7 +99,7 @@ namespace Raster is
                 od
 
                 if stroke.count > 0 then
-                    strokes.add(stroke |> collect_list())
+                    strokes.add(stroke |> collect_mutable())
                 fi
 
                 glyphs[at] = GLYPH(left, right, strokes)
