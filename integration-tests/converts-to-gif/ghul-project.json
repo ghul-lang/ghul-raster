@@ -1,0 +1,6 @@
+{
+    "name": "converts-to-gif",
+    "kind": "program",
+    "targets": ["dotnet"],
+    "sources": ["*.ghul"]
+}
