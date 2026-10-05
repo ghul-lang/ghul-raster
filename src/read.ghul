@@ -11,9 +11,17 @@ namespace Raster is
     // An IMAGE carries no alpha of its own, so a transparent pixel is
     // composited onto the white an image starts as.
     partial IMAGE is
+        /// The PNG at `path`. On the wasm target, reading a PNG is not supported
+        /// yet and throws `Ghul.NotSupportedException`.
+        ///
+        /// - path: the file to read
         read(path: string) -> IMAGE static =>
             decode(IO.File.read_all_bytes(path))
 
+        /// The PNG `bytes` hold. On the wasm target, reading a PNG is not
+        /// supported yet and throws `Ghul.NotSupportedException`.
+        ///
+        /// - bytes: the whole file
         decode(bytes: ubyte[]) -> IMAGE static is
             let header = _DECODER.header(bytes)
 
@@ -233,6 +241,7 @@ namespace Raster is
 
         // The zlib wrapper is two bytes of header and four of checksum
         // around a raw deflate stream, which is what DeflateStream reads.
+        @IF.dotnet()
         inflate(zlib: ubyte[]) -> ubyte[] static is
             if zlib.count < 6 then
                 throw Exception("the image data is too short to be a zlib stream")
@@ -252,6 +261,10 @@ namespace Raster is
 
             return out.to_array()
         si
+
+        @IF.wasm()
+        inflate(zlib: ubyte[]) -> ubyte[] static =>
+            throw Ghul.NotSupportedException("reading a PNG is not supported on the wasm target")
 
         paeth(left: int, above: int, corner: int) -> int static =>
             (let estimate = left + above - corner

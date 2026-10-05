@@ -1,0 +1,9 @@
+{
+    "name": "converts-to-gif",
+    "kind": "program",
+    "targets": ["wasm"],
+    "sources": ["*.ghul"],
+    "dependencies": {
+        "ghul-raster": { "path": "../.." }
+    }
+}

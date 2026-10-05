@@ -1,0 +1,9 @@
+{
+    "name": "writes-an-animation",
+    "kind": "program",
+    "targets": ["wasm"],
+    "sources": ["*.ghul"],
+    "dependencies": {
+        "ghul-raster": { "path": "../.." }
+    }
+}

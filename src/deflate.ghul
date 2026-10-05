@@ -1,0 +1,202 @@
+namespace Raster is
+    use Collections.LIST
+
+    /// Raw deflate streams (RFC 1951), compressed in ghūl
+    /// rather than through the platform's compression library.
+    class DEFLATE is
+        _length_base: int[] static => [
+            3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 17, 19, 23, 27, 31,
+            35, 43, 51, 59, 67, 83, 99, 115, 131, 163, 195, 227, 258
+        ]
+
+        _length_extra: int[] static => [
+            0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2,
+            3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 0
+        ]
+
+        _distance_base: int[] static => [
+            1, 2, 3, 4, 5, 7, 9, 13, 17, 25, 33, 49, 65, 97, 129, 193,
+            257, 385, 513, 769, 1025, 1537, 2049, 3073, 4097, 6145,
+            8193, 12289, 16385, 24577
+        ]
+
+        _distance_extra: int[] static => [
+            0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6,
+            7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13
+        ]
+
+
+        /// `data` as a raw deflate stream: one block coded with the fixed
+        /// Huffman codes, with repeated runs replaced by back-references.
+        ///
+        /// - data: the bytes to compress
+        compress(data: ubyte[]) -> ubyte[] static is
+            let out = _BIT_WRITER()
+
+            out.bits(1, 1)
+            out.bits(1, 2)
+
+            let window = 32768
+            let chain_limit = 64
+            let head = LIST[int](65536)
+            let previous = LIST[int](data.count)
+
+            for _ in 0..65536 do
+                head.add(-1)
+            od
+
+            for _ in 0..data.count do
+                previous.add(-1)
+            od
+
+            let at mut = 0
+
+            while at < data.count do
+                let best_length mut = 0
+                let best_distance mut = 0
+
+                if at + 2 < data.count then
+                    let hash = _hash(data, at)
+                    let candidate mut = head[hash]
+                    let tries mut = 0
+
+                    while candidate >= 0 /\ at - candidate <= window /\ tries < chain_limit do
+                        let limit = if data.count - at < 258 then data.count - at else 258 fi
+                        let length mut = 0
+
+                        while length < limit /\ data[candidate + length] == data[at + length] do
+                            length = length + 1
+                        od
+
+                        if length > best_length then
+                            best_length = length
+                            best_distance = at - candidate
+
+                            if length == limit then
+                                break
+                            fi
+                        fi
+
+                        candidate = previous[candidate]
+                        tries = tries + 1
+                    od
+                fi
+
+                if best_length >= 3 then
+                    _write_length(out, best_length)
+                    _write_distance(out, best_distance)
+
+                    for step in 0..best_length do
+                        _insert(data, at + step, head, previous)
+                    od
+
+                    at = at + best_length
+                else
+                    _write_literal(out, cast int(data[at]))
+                    _insert(data, at, head, previous)
+
+                    at = at + 1
+                fi
+            od
+
+            _write_literal(out, 256)
+
+            return out.finish()
+        si
+
+        _hash(data: ubyte[], at: int) -> int static =>
+            ((cast int(data[at]) << 8) ^ (cast int(data[at + 1]) << 4) ^ cast int(data[at + 2])) & 0xFFFF
+
+        _insert(data: ubyte[], at: int, head: LIST[int], previous: LIST[int]) static is
+            if at + 2 < data.count then
+                let hash = _hash(data, at)
+
+                previous[at] = head[hash]
+                head[hash] = at
+            fi
+        si
+
+        // A literal or length symbol in the fixed literal/length code.
+        _write_literal(out: _BIT_WRITER, symbol: int) static is
+            if symbol < 144 then
+                out.code(0x30 + symbol, 8)
+            elif symbol < 256 then
+                out.code(0x190 + symbol - 144, 9)
+            elif symbol < 280 then
+                out.code(symbol - 256, 7)
+            else
+                out.code(0xC0 + symbol - 280, 8)
+            fi
+        si
+
+        _write_length(out: _BIT_WRITER, length: int) static is
+            let bases = _length_base
+            let code mut = bases.count - 1
+
+            while bases[code] > length do
+                code = code - 1
+            od
+
+            _write_literal(out, 257 + code)
+            out.bits(length - bases[code], _length_extra[code])
+        si
+
+        _write_distance(out: _BIT_WRITER, distance: int) static is
+            let bases = _distance_base
+            let code mut = bases.count - 1
+
+            while bases[code] > distance do
+                code = code - 1
+            od
+
+            out.code(code, 5)
+            out.bits(distance - bases[code], _distance_extra[code])
+        si
+    si
+
+    // Bits written least significant first, the order deflate packs them,
+    // into bytes.
+    class _BIT_WRITER is
+        _out: LIST[ubyte]
+        _buffer: int
+        _held: int
+
+        init() is
+            _out = LIST[ubyte]()
+        si
+
+        // The low `count` bits of `value`, least significant first.
+        bits(value: int, count: int) is
+            _buffer = _buffer | (value << _held)
+            _held = _held + count
+
+            while _held >= 8 do
+                _out.add(cast ubyte(_buffer & 0xFF))
+                _buffer = _buffer >>> 8
+                _held = _held - 8
+            od
+        si
+
+        // A Huffman code, which deflate sends most significant bit first.
+        code(value: int, length: int) is
+            let reversed mut = 0
+
+            for index in 0..length do
+                reversed = (reversed << 1) | ((value >> index) & 1)
+            od
+
+            bits(reversed, length)
+        si
+
+        // The bytes written, the last padded out with zero bits.
+        finish() -> ubyte[] is
+            if _held > 0 then
+                _out.add(cast ubyte(_buffer & 0xFF))
+                _buffer = 0
+                _held = 0
+            fi
+
+            return _out.to_array()
+        si
+    si
+si

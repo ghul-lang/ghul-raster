@@ -1,0 +1,9 @@
+{
+    "name": "draws-a-chart",
+    "kind": "program",
+    "targets": ["wasm"],
+    "sources": ["*.ghul"],
+    "dependencies": {
+        "ghul-raster": { "path": "../.." }
+    }
+}

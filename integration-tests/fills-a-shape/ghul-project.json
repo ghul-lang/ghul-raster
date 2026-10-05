@@ -1,0 +1,9 @@
+{
+    "name": "fills-a-shape",
+    "kind": "program",
+    "targets": ["wasm"],
+    "sources": ["*.ghul"],
+    "dependencies": {
+        "ghul-raster": { "path": "../.." }
+    }
+}

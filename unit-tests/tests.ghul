@@ -1404,4 +1404,49 @@ namespace Raster.Tests is
                 else "drawing the key left the colour changed"
         si
     si
+
+    @TestClass()
+    class DEFLATE_Tests is
+        init() is si
+
+        _samples: Collections.List[ubyte[]] static =>
+            [
+                Collections.LIST[ubyte]().to_array(),
+                [42ub],
+                (0..100_000) |> map(i => cast ubyte(i % 7)) |> collect(),
+                (0..50_000) |> map(i => cast ubyte((i * 7919 + i / 3) % 251)) |> collect(),
+                (0..70_000) |> map(i => if i % 1000 < 900 then 255ub else cast ubyte(i % 256) fi) |> collect()
+            ]
+
+        _platform_decompress(data: ubyte[]) -> ubyte[] static is
+            let stream = System.IO.Compression.DeflateStream(IO.MemoryStream(data), System.IO.Compression.CompressionMode.DECOMPRESS)
+            let out = IO.MemoryStream()
+
+            stream.copy_to(out)
+
+            return out.to_array()
+        si
+
+        _same(expected: ubyte[], actual: ubyte[], what: string) static is
+            assert expected.count == actual.count else "{what}: {actual.count} bytes, expected {expected.count}"
+
+            for i in 0..expected.count do
+                assert expected[i] == actual[i] else "{what}: byte {i} differs"
+            od
+        si
+
+        @Test()
+        The_platform_reads_what_is_compressed() is
+            for sample in _samples do
+                _same(sample, _platform_decompress(DEFLATE.compress(sample)), "platform read of {sample.count}")
+            od
+        si
+
+        @Test()
+        Repetitive_data_compresses() is
+            let sample = (0..100_000) |> map(i => cast ubyte(i % 7)) |> collect()
+
+            assert DEFLATE.compress(sample).count < 2_000
+        si
+    si
 si

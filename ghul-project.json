@@ -1,0 +1,6 @@
+{
+    "name": "ghul-raster",
+    "kind": "library",
+    "targets": ["wasm"],
+    "sources": ["src/**/*.ghul"]
+}
