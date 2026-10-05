@@ -80,11 +80,11 @@ namespace Raster is
                 bottom = Math.max(bottom, last)
             od
 
-            let coverage = (0..width) |> map(_ => 0.0D) |> collect_mutable()
-            let total = (0..width) |> map(_ => 0.0D) |> collect_mutable()
-            let red = (0..width) |> map(_ => 0.0D) |> collect_mutable()
-            let green = (0..width) |> map(_ => 0.0D) |> collect_mutable()
-            let blue = (0..width) |> map(_ => 0.0D) |> collect_mutable()
+            let coverage = repeat(0.0D, width) |> collect_mutable()
+            let total = repeat(0.0D, width) |> collect_mutable()
+            let red = repeat(0.0D, width) |> collect_mutable()
+            let green = repeat(0.0D, width) |> collect_mutable()
+            let blue = repeat(0.0D, width) |> collect_mutable()
 
             for y in top..bottom do
                 let row_first mut = width
