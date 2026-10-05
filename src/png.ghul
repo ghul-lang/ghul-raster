@@ -30,6 +30,7 @@ namespace Raster is
             zlib(scanlines(rgb, width, height))
 
         // Each row copied whole after the zero its filter byte starts as.
+        @IF.dotnet()
         scanlines(rgb: ubyte[], width: int, height: int) -> ubyte[] static =>
             (let stride = width * 3
              let raw = System.GC.allocate_array[ubyte](height * (stride + 1), false)
@@ -42,6 +43,22 @@ namespace Raster is
 
              raw)
 
+        @IF.wasm()
+        scanlines(rgb: ubyte[], width: int, height: int) -> ubyte[] static =>
+            (let stride = width * 3
+             let raw = LIST[ubyte](height * (stride + 1))
+
+             for y in 0..height do
+                 raw.add(0ub)
+
+                 for x in 0..stride do
+                     raw.add(rgb[y * stride + x])
+                 od
+             od
+
+             raw.to_array())
+
+        @IF.dotnet()
         zlib(data: ubyte[]) -> ubyte[] static =>
             (let out = IO.MemoryStream()
 
@@ -57,6 +74,23 @@ namespace Raster is
 
              stream.write(data, 0, data.count)
              stream.close()
+
+             write_int(out, adler32(data))
+
+             out.to_array())
+
+        // The image data deflated in ghūl, for a target with no compression
+        // library.
+        @IF.wasm()
+        zlib(data: ubyte[]) -> ubyte[] static =>
+            (let out = IO.MemoryStream()
+
+             out.write_byte(0x78ub)
+             out.write_byte(0x01ub)
+
+             let compressed = DEFLATE.compress(data)
+
+             out.write(compressed, 0, compressed.count)
 
              write_int(out, adler32(data))
 

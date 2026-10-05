@@ -4,12 +4,22 @@ namespace Raster is
     // Reading an animated PNG back in, a frame at a time. A PNG with no
     // animation reads as one frame.
     partial ANIMATION is
+        /// The animated PNG at `path`, a frame at a time. On the wasm target,
+        /// reading a PNG is not supported yet and throws
+        /// `Ghul.NotSupportedException`.
+        ///
+        /// - path: the file to read
         read(path: string) -> ANIMATION static =>
             decode(IO.File.read_all_bytes(path))
 
         // Each frame is drawn onto what the frames before it left, and then
         // taken as a whole image, so a frame covering part of the image or
         // blending over it reads as what a browser would show.
+        /// The animated PNG `bytes` hold, a frame at a time. On the wasm target,
+        /// reading a PNG is not supported yet and throws
+        /// `Ghul.NotSupportedException`.
+        ///
+        /// - bytes: the whole file
         decode(bytes: ubyte[]) -> ANIMATION static is
             let header = _DECODER.header(bytes)
             let palette = _DECODER.palette(bytes)
@@ -45,11 +55,11 @@ namespace Raster is
                     // came before it; otherwise it is a still shown by
                     // readers that do not animate, and no frame at all.
                     if data.count > 0 then
-                        data[data.count - 1].add_range(System.ArraySegment[ubyte](bytes, from, to - from))
+                        _append(data[data.count - 1], bytes, from, to - from)
                     fi
                 elif kind =~ "fdAT" then
                     if data.count > 0 then
-                        data[data.count - 1].add_range(System.ArraySegment[ubyte](bytes, from + 4, to - from - 4))
+                        _append(data[data.count - 1], bytes, from + 4, to - from - 4)
                     fi
                 fi
             si)
@@ -109,5 +119,11 @@ namespace Raster is
 
         _rgb(index: int) -> ubyte[] =>
             _DECODER.unfilter(_DECODER.inflate(_frames[index]), width, height, 3, false)
+
+        _append(into: LIST[ubyte], bytes: ubyte[], from: int, count: int) static is
+            for at in from..from + count do
+                into.add(bytes[at])
+            od
+        si
     si
 si

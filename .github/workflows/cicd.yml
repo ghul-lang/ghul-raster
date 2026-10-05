@@ -96,6 +96,29 @@ jobs:
     - name: Integration tests
       run: dotnet ghul-test --use-dotnet-build integration-tests
 
+  wasm-tests:
+    name: Wasm integration tests
+    runs-on: ubuntu-latest
+
+    timeout-minutes: 15
+    needs: [version]
+
+    steps:
+    - uses: actions/checkout@v7
+
+    # A wasm program runs under Node.js, which needs WebAssembly GC: on by
+    # default from Node.js 22.
+    - name: Set up Node.js
+      uses: actions/setup-node@v7
+      with:
+        node-version: '24'
+
+    - name: .NET tool restore
+      run: dotnet tool restore
+
+    - name: Build and run the integration tests for the wasm target
+      run: dotnet ghul-test --use-ghul-cli --ghul "dotnet ghul" --target wasm integration-tests
+
   build:
     name: Build the package
     runs-on: ubuntu-latest
@@ -150,7 +173,7 @@ jobs:
       image: mcr.microsoft.com/dotnet/sdk:10.0
 
     timeout-minutes: 10
-    needs: [build, unit-tests, integration-tests, package-tests]
+    needs: [build, unit-tests, integration-tests, wasm-tests, package-tests]
 
     permissions:
       # Lets the job ask GitHub for the short-lived token nuget.org trades for

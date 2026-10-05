@@ -35,11 +35,7 @@ namespace Raster is
             self.width = width
             self.height = height
 
-            let white = System.GC.allocate_array[ubyte](width * height * 3, false)
-
-            System.Array.fill(white, 255ub)
-
-            _pixels = LIST[ubyte](white)
+            _pixels = _white(width * height * 3)
 
             _xx = 1.0D
             _xy = 0.0D
@@ -153,15 +149,44 @@ namespace Raster is
               green = _pixels[at + 1],
               blue = _pixels[at + 2]))
 
+        @IF.dotnet()
+        _white(count: int) -> LIST[ubyte] static is
+            let white = System.GC.allocate_array[ubyte](count, false)
+
+            System.Array.fill(white, 255ub)
+
+            return LIST[ubyte](white)
+        si
+
+        @IF.wasm()
+        _white(count: int) -> LIST[ubyte] static is
+            let white = LIST[ubyte](count)
+
+            for _ in 0..count do
+                white.add(255ub)
+            od
+
+            return white
+        si
+
         // Every pixel back to white, as a new image starts, so one image can
         // be drawn again frame after frame without allocating another.
+        @IF.dotnet()
         clear() is
             System.Runtime.InteropServices.CollectionsMarshal
                 .as_span(_pixels)
                 .fill(255ub)
         si
 
+        @IF.wasm()
+        clear() is
+            for at in 0.._pixels.count do
+                _pixels[at] = 255ub
+            od
+        si
+
         // Every pixel set to one colour, for painting a background.
+        @IF.dotnet()
         clear(red: ubyte, green: ubyte, blue: ubyte) is
             let row = System.GC.allocate_array[ubyte](width * 3, false)
 
@@ -175,6 +200,19 @@ namespace Raster is
 
             for y in 0..height do
                 System.MemoryExtensions.as_span(row).copy_to(pixels.slice(y * width * 3))
+            od
+        si
+
+        @IF.wasm()
+        clear(red: ubyte, green: ubyte, blue: ubyte) is
+            let at mut = 0
+
+            while at < _pixels.count do
+                _pixels[at] = red
+                _pixels[at + 1] = green
+                _pixels[at + 2] = blue
+
+                at = at + 3
             od
         si
 
@@ -606,12 +644,7 @@ namespace Raster is
 
         // A copy of the pixels, three bytes each for red, green and blue, a
         // row at a time from the top.
-        rgb() -> ubyte[] =>
-            (let copy = System.GC.allocate_array[ubyte](_pixels.count, false)
-
-             _pixels.copy_to(copy)
-
-             copy)
+        rgb() -> ubyte[] => _pixels.to_array()
 
         // Everything is drawn as strokes, so this is the only place pixels
         // are touched by a drawing operation.

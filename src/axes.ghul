@@ -289,10 +289,16 @@ namespace Raster is
              let shown =
                  if Math.abs(value) < step * 0.000001D then 0.0D else value fi
 
-             shown.to_string(
-                 "F{places}",
-                 System.Globalization.CultureInfo.invariant_culture
-             ))
+             _invariant(shown, "F{places}"))
+
+        @IF.dotnet()
+        _invariant(value: double, format: string) -> string static =>
+            value.to_string(format, System.Globalization.CultureInfo.invariant_culture)
+
+        // The wasm target formats numbers the same in every culture.
+        @IF.wasm()
+        _invariant(value: double, format: string) -> string static =>
+            value.to_string(format)
 
         _most(pixels: double, spacing: double) -> int static =>
             Math.max(2, cast int(pixels / spacing))
