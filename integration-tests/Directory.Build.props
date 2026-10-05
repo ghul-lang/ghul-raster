@@ -1,0 +1,10 @@
+<Project>
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+  <!-- Every test references the one library, and the tests build in
+       parallel: building it from each of them races on its outputs. It is
+       built once, before the tests run. -->
+  <PropertyGroup>
+    <BuildProjectReferences>false</BuildProjectReferences>
+  </PropertyGroup>
+</Project>

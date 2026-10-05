@@ -290,9 +290,14 @@ does not.
 ## Tests
 
 ```sh
+dotnet build
 dotnet test unit-tests
 dotnet ghul-test --use-dotnet-build integration-tests
 ```
+
+The integration tests use the library as `dotnet build` last left it, rather
+than each building it, since they run in parallel and would race on its
+outputs.
 
 The unit tests cover the font and the geometry. The integration test draws a
 plot and compares it against `plot.png.expected`, which is the assertion that
