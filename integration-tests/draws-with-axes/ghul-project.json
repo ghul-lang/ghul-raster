@@ -1,12 +1,12 @@
 {
     "name": "draws-with-axes",
     "kind": "program",
-    "targets": ["wasm"],
+    "targets": ["wasm", "llvm"],
     "sources": ["*.ghul"],
-    "compiler": "65.3.2",
+    "compiler": "65.21.1",
     "dependencies": {
-        "ghul-core": { "git": "https://github.com/ghul-lang/ghul-core", "tag": "v0.37.0" },
-        "ghul-runtime": { "git": "https://github.com/ghul-lang/ghul-runtime", "tag": "v25.4.0" },
+        "ghul-core": { "git": "https://github.com/ghul-lang/ghul-core", "tag": "v0.55.0" },
+        "ghul-runtime": { "git": "https://github.com/ghul-lang/ghul-runtime", "tag": "v25.10.3" },
         "ghul-raster": { "path": "../.." }
     }
 }

@@ -292,8 +292,15 @@ does not.
 ```sh
 dotnet build
 dotnet test unit-tests
-dotnet ghul-test --use-dotnet-build integration-tests
+dotnet ghul-test integration-tests                 # .NET, with MSBuild
+dotnet ghul-test --config wasm integration-tests   # WebAssembly, under Node
+dotnet ghul-test --config llvm integration-tests   # native executables
 ```
+
+The wasm and llvm runs build each test's `ghul-project.json` with ghul-cli; a
+test runs on the targets its manifest lists. On those targets, which have no
+.NET library, the library uses the code marked `@IF.source_core()` in place of
+what `@IF.dotnet()` marks.
 
 The integration tests use the library as `dotnet build` last left it, rather
 than each building it, since they run in parallel and would race on its

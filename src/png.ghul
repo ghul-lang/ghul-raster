@@ -43,7 +43,7 @@ namespace Raster is
 
              raw)
 
-        @IF.wasm()
+        @IF.source_core()
         scanlines(rgb: ubyte[], width: int, height: int) -> ubyte[] static =>
             (let stride = width * 3
              let raw = LIST[ubyte](height * (stride + 1))
@@ -81,7 +81,7 @@ namespace Raster is
 
         // The image data deflated in ghūl, for a target with no compression
         // library.
-        @IF.wasm()
+        @IF.source_core()
         zlib(data: ubyte[]) -> ubyte[] static =>
             (let out = IO.MemoryStream()
 

@@ -4,8 +4,8 @@ namespace Raster is
     // Reading an animated PNG back in, a frame at a time. A PNG with no
     // animation reads as one frame.
     partial ANIMATION is
-        /// The animated PNG at `path`, a frame at a time. On the wasm target,
-        /// reading a PNG is not supported yet and throws
+        /// The animated PNG at `path`, a frame at a time. On the wasm and
+        /// llvm targets, reading a PNG is not supported yet and throws
         /// `Ghul.NotSupportedException`.
         ///
         /// - path: the file to read
@@ -15,8 +15,8 @@ namespace Raster is
         // Each frame is drawn onto what the frames before it left, and then
         // taken as a whole image, so a frame covering part of the image or
         // blending over it reads as what a browser would show.
-        /// The animated PNG `bytes` hold, a frame at a time. On the wasm target,
-        /// reading a PNG is not supported yet and throws
+        /// The animated PNG `bytes` hold, a frame at a time. On the wasm and
+        /// llvm targets, reading a PNG is not supported yet and throws
         /// `Ghul.NotSupportedException`.
         ///
         /// - bytes: the whole file

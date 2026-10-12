@@ -1,0 +1,27 @@
+{
+    // How the integration tests are run. `msbuild`, the default, builds each
+    // test's .ghulproj for .NET with MSBuild. `wasm` and `llvm` build each
+    // test's ghul-project.json with the ghul-cli the tool manifest pins, for
+    // the wasm and llvm targets: `llvm` builds every project that lists
+    // llvm as a native executable, beside the test in
+    // .targets-<test>-llvm/, with the ghul-llvm release ghul-cli fetches.
+    "default": "msbuild",
+    "configurations": {
+        "msbuild": {
+            "build": "msbuild",
+            "compiler": "project"
+        },
+        "projects": {
+            "build": "ghul-cli",
+            "ghul": "dotnet ghul"
+        },
+        "wasm": {
+            "extends": "projects",
+            "ghul_target": "wasm"
+        },
+        "llvm": {
+            "extends": "projects",
+            "build_targets": ["llvm"]
+        }
+    }
+}
