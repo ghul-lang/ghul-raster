@@ -26,3 +26,7 @@ output.txt
 # animations a test wrote, as for images above
 *.gif
 !*.gif.expected
+
+# per-target builds of a test, beside it
+.targets-*/
+integration-tests/*/out/

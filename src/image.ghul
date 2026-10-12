@@ -158,7 +158,7 @@ namespace Raster is
             return LIST[ubyte](white)
         si
 
-        @IF.wasm()
+        @IF.source_core()
         _white(count: int) -> LIST[ubyte] static is
             let white = LIST[ubyte](count)
 
@@ -178,7 +178,7 @@ namespace Raster is
                 .fill(255ub)
         si
 
-        @IF.wasm()
+        @IF.source_core()
         clear() is
             for at in 0.._pixels.count do
                 _pixels[at] = 255ub
@@ -203,7 +203,7 @@ namespace Raster is
             od
         si
 
-        @IF.wasm()
+        @IF.source_core()
         clear(red: ubyte, green: ubyte, blue: ubyte) is
             let at mut = 0
 
