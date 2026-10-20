@@ -1120,6 +1120,43 @@ namespace Raster.Tests is
         si
 
         @Test()
+        Flat_colours_that_fill_most_of_a_frame_survive_quantisation_exactly() is
+            let animation = ANIMATION(100, 100)
+            let image = IMAGE(100, 100)
+
+            for frame in 0..3 do
+                for y in 0..100 do
+                    for x in 0..100 do
+                        if y < 70 then
+                            image.set_pixel(x, y, 250ub, 250ub, 246ub)
+                        elif x < 10 then
+                            image.set_pixel(x, y, 20ub, 20ub, 20ub)
+                        elif x < 30 then
+                            image.set_pixel(x, y, 0ub, 154ub, 72ub)
+                        else
+                            image.set_pixel(x, y, cast ubyte(x * 2 + frame * 9), cast ubyte(y * 2), cast ubyte((x + y) % 256))
+                        fi
+                    od
+                od
+
+                animation.add(image, 40)
+            od
+
+            let gif = _decode(animation.encode_gif())
+
+            for frame in 0..3 do
+                let expected = _colours(animation.frame(frame))
+
+                for at in 0..expected.count do
+                    if expected[at] == 0xFAFAF6 \/ expected[at] == 0x141414 \/ expected[at] == 0x009A48 then
+                        assert gif.frames[frame][at] == expected[at]
+                            else "frame {frame} pixel {at} was {expected[at]} and came back {gif.frames[frame][at]}"
+                    fi
+                od
+            od
+        si
+
+        @Test()
         A_large_frame_runs_the_code_table_full_and_clears_it() is
             let animation = ANIMATION(200, 150)
             let image = IMAGE(200, 150)

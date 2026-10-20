@@ -29,11 +29,14 @@ package and ships the same assembly to the browser.
 
 ## What to watch for here
 
-- **Any change to what existing calls draw.** A different pixel anywhere in the
-  output of an existing primitive - antialiasing, rounding, stroke ends, fill
-  coverage, text metrics - breaks every consumer's image expectation at the
-  next package bump. That can be right, as when a bug is being fixed, but the
-  description has to say so, and it is a major version.
+- **A change to what existing calls draw.** Exact pixel output is not a
+  compatibility promise. A fix or an improvement may change the pixels the same
+  sequence of calls produces - antialiasing, rounding, stroke ends, fill
+  coverage, text metrics, a GIF palette - when the description says so and the
+  difference is the evident consequence of the change. Flag a pixel change that
+  is an unwanted side effect or an unrelated regression: one the description
+  does not account for, or that moves pictures the change should not touch. An
+  expected image that moves should move for the stated reason and no other.
 - **Deterministic output.** The PNG encoder must produce the same bytes for the
   same image on every platform and run: no timestamps or optional chunks, no
   dependence on hash ordering, culture or floating-point formatting, and no
@@ -56,7 +59,11 @@ package and ships the same assembly to the browser.
 
 ## Versioning
 
-Major means a consumer's existing program draws different pixels, stops
-compiling, or the `<<image ...>>` contract changes. Minor means additions: new
-primitives, new overloads, new helpers. Patch is a fix that draws the same
-pixels for correct programs, or changes nothing a program can observe.
+Major means a consumer's existing program stops compiling, or the
+`<<image ...>>` contract changes, or an unwanted side effect changes what it
+draws. Different pixels that are the described, expected consequence of a fix or
+an improvement do not make a change major. Minor means additions: new
+primitives, new overloads, new helpers, and a fix or improvement whose expected
+consequence is different pixels from the same calls, since a consumer's expected
+images move at the next bump. Patch is a fix that draws the same pixels for
+correct programs, or changes nothing a program can observe.
