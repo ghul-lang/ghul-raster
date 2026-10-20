@@ -10,14 +10,14 @@
       "rollForward": false
     },
     "ghul.test": {
-      "version": "7.0.0",
+      "version": "8.3.0",
       "commands": [
         "ghul-test"
       ],
       "rollForward": false
     },
     "ghul.cli": {
-      "version": "0.56.1",
+      "version": "9.4.0",
       "commands": [
         "ghul"
       ],
