@@ -63,6 +63,7 @@ Major means a consumer's existing program stops compiling, or the
 `<<image ...>>` contract changes, or an unwanted side effect changes what it
 draws. Different pixels that are the described, expected consequence of a fix or
 an improvement do not make a change major. Minor means additions: new
-primitives, new overloads, new helpers. Patch is a fix, including one whose
-expected consequence is different pixels from the calls it fixes, or a change
-that no program can observe.
+primitives, new overloads, new helpers, and a fix or improvement whose expected
+consequence is different pixels from the same calls, since a consumer's expected
+images move at the next bump. Patch is a fix that draws the same pixels for
+correct programs, or changes nothing a program can observe.
