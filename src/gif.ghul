@@ -2,11 +2,13 @@ namespace Raster is
     use Collections.LIST
     use Collections.MAP
     use Math = System.Math
+    use Ghul.Pipes
 
     // Writing an animation as a GIF, for somewhere that animates a GIF but
     // not a PNG. A GIF holds at most 256 colours, so the frames share one
-    // palette: every colour they use if there are few enough, otherwise 256
-    // chosen by median cut, each pixel taking the nearest.
+    // palette: every colour they use if there are few enough, otherwise the
+    // colours that fill a visible share of the frames, kept exactly, and a
+    // median cut of the rest for what remains, each pixel taking the nearest.
     partial ANIMATION is
         write_gif(path: string) is
             IO.File.write_all_bytes(path, encode_gif())
@@ -139,7 +141,37 @@ namespace Raster is
                 return colours
             fi
 
-            return _median_cut(colours, counts, 256)
+            // A colour that fills a visible share of the frames, a flat
+            // background or a line, keeps its own entry, so averaging with
+            // its neighbours cannot shift it; the rest share what is left.
+            let total mut = 0L
+
+            for colour in colours do
+                total = total + cast long(counts[colour])
+            od
+
+            let frequent = colours
+                |> filter(colour => cast long(counts[colour]) * 1000L >= total)
+                |> collect_mutable()
+
+            frequent.sort((a, b) => counts[b] - counts[a])
+
+            let kept = frequent |> take(128) |> collect_mutable()
+
+            kept.sort()
+
+            let rest = colours |> filter(colour => !kept.contains(colour)) |> collect_mutable()
+            let slots = 256 - kept.count
+
+            if rest.count <= slots then
+                kept.add_range(rest)
+
+                return kept
+            fi
+
+            kept.add_range(_median_cut(rest, counts, slots))
+
+            return kept
         si
 
         // Splits the colours into boxes, each time halving the box that
@@ -210,9 +242,14 @@ namespace Raster is
                 let red mut = 0L
                 let green mut = 0L
                 let blue mut = 0L
+                let dominant mut = box[0]
 
                 for colour in box do
                     let count = cast long(counts[colour])
+
+                    if counts[colour] > counts[dominant] then
+                        dominant = colour
+                    fi
 
                     weight = weight + count
                     red = red + count * cast long(_channel(colour, 0))
@@ -220,11 +257,15 @@ namespace Raster is
                     blue = blue + count * cast long(_channel(colour, 2))
                 od
 
-                palette.add(
-                    cast int(((red + weight / 2L) / weight) << 16) |
-                    cast int(((green + weight / 2L) / weight) << 8) |
-                    cast int((blue + weight / 2L) / weight)
-                )
+                if cast long(counts[dominant]) * 2L >= weight then
+                    palette.add(dominant)
+                else
+                    palette.add(
+                        cast int(((red + weight / 2L) / weight) << 16) |
+                        cast int(((green + weight / 2L) / weight) << 8) |
+                        cast int((blue + weight / 2L) / weight)
+                    )
+                fi
             od
 
             return palette
