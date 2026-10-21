@@ -1,8 +1,8 @@
 # ghul-raster
 
-[![CI](https://img.shields.io/github/actions/workflow/status/degory/ghul-raster/cicd.yml?branch=main)](https://github.com/degory/ghul-raster/actions/workflows/cicd.yml?query=branch%3Amain)
+[![CI](https://img.shields.io/github/actions/workflow/status/ghul-lang/ghul-raster/cicd.yml?branch=main)](https://github.com/ghul-lang/ghul-raster/actions/workflows/cicd.yml?query=branch%3Amain)
 [![NuGet version (ghul.raster)](https://img.shields.io/nuget/v/ghul.raster.svg)](https://www.nuget.org/packages/ghul.raster/)
-[![License](https://img.shields.io/github/license/degory/ghul-raster)](https://github.com/degory/ghul-raster/blob/main/LICENSE)
+[![License](https://img.shields.io/github/license/ghul-lang/ghul-raster)](https://github.com/ghul-lang/ghul-raster/blob/main/LICENSE)
 [![ghūl](https://img.shields.io/badge/gh%C5%ABl-100%25!-information)](https://ghul.dev)
 
 Drawing into a PNG, from ghūl, with no dependency on a graphics stack.
@@ -283,7 +283,7 @@ originally created by James Hurt, Cognition, Inc.
 `fonts/futural.jhf` is the face and `fonts/hershey.txt` is the notice its
 distribution terms require to accompany it. `build/embed-font.sh` writes the
 face into `src/font-data.ghul`, which is what the library reads: the compiler
-emits no embedded resources (degory/ghul#2477), and a source string works
+emits no embedded resources (ghul-lang/ghul#2477), and a source string works
 under WebAssembly and single-file publish, where a file beside the assembly
 does not.
 
