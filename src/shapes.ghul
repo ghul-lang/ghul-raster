@@ -50,7 +50,7 @@ namespace Raster is
         // first, so shapes that meet cover it completely. Where shapes
         // overlap, their colours mix.
         fill(shapes: SHAPES) is
-            let outlines = LIST[(xs: double[], ys: double[], top: int, bottom: int)]()
+            let outlines = LIST[(xs: ARRAY[double], ys: ARRAY[double], top: int, bottom: int)]()
 
             let top mut = height
             let bottom mut = 0

@@ -383,7 +383,7 @@ namespace Raster is
         // Where the outline crosses this row, in order along it. The
         // pairs between them are what lies inside.
         _crossings(
-            xs: double[], ys: double[], at: double
+            xs: ARRAY[double], ys: ARRAY[double], at: double
         ) -> Collections.List[double] static is
             let found = LIST[double]()
 
@@ -613,7 +613,7 @@ namespace Raster is
 
         // The bytes `write` would put in a file, for a caller with somewhere
         // else to send them.
-        encode() -> ubyte[] =>
+        encode() -> ARRAY[ubyte] =>
             (let out = IO.MemoryStream()
 
              _PNG.write_start(out, width, height)
@@ -624,11 +624,11 @@ namespace Raster is
 
         // The image as a PNG, for a host that shows values - a notebook,
         // a REPL - to show in place of the text `$` writes for it.
-        representations() -> Collections.Iterable[(mime: string, content: ubyte[])] pure =>
+        representations() -> Collections.Iterable[(mime: string, content: ARRAY[ubyte])] pure =>
             [(mime = "image/png", content = encode())]
 
         // An image holding these pixels, laid out as `rgb` gives them.
-        from_rgb(width: int, height: int, rgb: ubyte[]) -> IMAGE static is
+        from_rgb(width: int, height: int, rgb: ARRAY[ubyte]) -> IMAGE static is
             if rgb.count != width * height * 3 then
                 throw System.ArgumentException(
                     "{rgb.count} bytes are not a {width} by {height} image"
@@ -644,7 +644,7 @@ namespace Raster is
 
         // A copy of the pixels, three bytes each for red, green and blue, a
         // row at a time from the top.
-        rgb() -> ubyte[] => _pixels.to_array()
+        rgb() -> ARRAY[ubyte] => _pixels.to_array()
 
         // Everything is drawn as strokes, so this is the only place pixels
         // are touched by a drawing operation.

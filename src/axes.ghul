@@ -243,7 +243,7 @@ namespace Raster is
         // Round numbers from `low` to `high` inclusive, one, two or five
         // times a power of ten apart, as many as fit without exceeding
         // `most` gaps.
-        ticks(low: double, high: double, most: int) -> double[] static is
+        ticks(low: double, high: double, most: int) -> ARRAY[double] static is
             if !(high > low) \/ most < 1 then
                 return [low]
             fi
@@ -279,7 +279,7 @@ namespace Raster is
 
         // A tick's value written with as many decimal places as the step
         // between ticks needs and no more.
-        label(value: double, ticks: double[]) -> string static =>
+        label(value: double, ticks: ARRAY[double]) -> string static =>
             (let step =
                  if ticks.count > 1 then ticks[1] - ticks[0] else 1.0D fi
 

@@ -6,9 +6,9 @@ namespace Raster is
     // and the compressed image data. A still image and an animation are
     // written with the same pieces.
     class _PNG is
-        IHDR: ubyte[] static => [73ub, 72ub, 68ub, 82ub]
-        IDAT: ubyte[] static => [73ub, 68ub, 65ub, 84ub]
-        IEND: ubyte[] static => [73ub, 69ub, 78ub, 68ub]
+        IHDR: ARRAY[ubyte] static => [73ub, 72ub, 68ub, 82ub]
+        IDAT: ARRAY[ubyte] static => [73ub, 68ub, 65ub, 84ub]
+        IEND: ARRAY[ubyte] static => [73ub, 69ub, 78ub, 68ub]
 
         // The signature and the header, which every PNG starts with.
         write_start(out: IO.MemoryStream, width: int, height: int) static is
@@ -26,12 +26,12 @@ namespace Raster is
 
         // Pixels as `IMAGE.rgb` gives them, as the zlib stream a PNG's image
         // data holds.
-        compress(rgb: ubyte[], width: int, height: int) -> ubyte[] static =>
+        compress(rgb: ARRAY[ubyte], width: int, height: int) -> ARRAY[ubyte] static =>
             zlib(scanlines(rgb, width, height))
 
         // Each row copied whole after the zero its filter byte starts as.
         @IF.dotnet()
-        scanlines(rgb: ubyte[], width: int, height: int) -> ubyte[] static =>
+        scanlines(rgb: ARRAY[ubyte], width: int, height: int) -> ARRAY[ubyte] static =>
             (let stride = width * 3
              let raw = System.GC.allocate_array[ubyte](height * (stride + 1), false)
 
@@ -44,7 +44,7 @@ namespace Raster is
              raw)
 
         @IF.source_core()
-        scanlines(rgb: ubyte[], width: int, height: int) -> ubyte[] static =>
+        scanlines(rgb: ARRAY[ubyte], width: int, height: int) -> ARRAY[ubyte] static =>
             (let stride = width * 3
              let raw = LIST[ubyte](height * (stride + 1))
 
@@ -59,7 +59,7 @@ namespace Raster is
              raw.to_array())
 
         @IF.dotnet()
-        zlib(data: ubyte[]) -> ubyte[] static =>
+        zlib(data: ARRAY[ubyte]) -> ARRAY[ubyte] static =>
             (let out = IO.MemoryStream()
 
              out.write_byte(0x78ub)
@@ -82,7 +82,7 @@ namespace Raster is
         // The image data deflated in ghūl, for a target with no compression
         // library.
         @IF.source_core()
-        zlib(data: ubyte[]) -> ubyte[] static =>
+        zlib(data: ARRAY[ubyte]) -> ARRAY[ubyte] static =>
             (let out = IO.MemoryStream()
 
              out.write_byte(0x78ub)
@@ -99,7 +99,7 @@ namespace Raster is
         // Sums are taken modulo 65521 once a block rather than once a byte:
         // 5552 bytes is the most that cannot carry the sums past what a
         // long holds between reductions, so the result is the same.
-        adler32(data: ubyte[]) -> int static =>
+        adler32(data: ARRAY[ubyte]) -> int static =>
             (let low mut = 1L
              let high mut = 0L
              let at mut = 0
@@ -131,7 +131,7 @@ namespace Raster is
             out.write_byte(cast ubyte(value & 0xFF))
         si
 
-        write_chunk(out: IO.MemoryStream, kind: ubyte[], data: ubyte[]) static is
+        write_chunk(out: IO.MemoryStream, kind: ARRAY[ubyte], data: ARRAY[ubyte]) static is
             write_int(out, data.count)
 
             out.write(kind, 0, kind.count)
@@ -145,7 +145,7 @@ namespace Raster is
 
         // The running CRC carried on over more bytes, a byte at a time
         // through a table rather than a bit at a time.
-        crc32(remainder: uint, data: ubyte[]) -> uint static =>
+        crc32(remainder: uint, data: ARRAY[ubyte]) -> uint static =>
             (let table = _table
              let running mut = remainder
              let at mut = 0
@@ -160,7 +160,7 @@ namespace Raster is
 
              running)
 
-        _table: uint[] static =>
+        _table: ARRAY[uint] static =>
             (if !_table_cache? then
                  let entries = LIST[uint]()
 
@@ -184,6 +184,6 @@ namespace Raster is
 
              _table_cache)
 
-        _table_cache: uint[]? static
+        _table_cache: ARRAY[uint]? static
     si
 si

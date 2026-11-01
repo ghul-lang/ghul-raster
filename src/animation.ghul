@@ -15,7 +15,7 @@ namespace Raster is
         // How many times the animation plays. Zero, the default, is forever.
         loops: int public
 
-        _frames: LIST[ubyte[]]
+        _frames: LIST[ARRAY[ubyte]]
         _delays: LIST[int]
 
         init(width: int, height: int) is
@@ -24,7 +24,7 @@ namespace Raster is
 
             loops = 0
 
-            _frames = LIST[ubyte[]]()
+            _frames = LIST[ARRAY[ubyte]]()
             _delays = LIST[int]()
         si
 
@@ -56,7 +56,7 @@ namespace Raster is
         // control chunk followed by its data. The first frame's data is an
         // ordinary image data chunk; the rest are frame data chunks, which
         // carry a sequence number shared with the control chunks.
-        encode() -> ubyte[] =>
+        encode() -> ARRAY[ubyte] =>
             (if _frames.count == 0 then
                  throw System.InvalidOperationException("an animation needs at least one frame")
              fi
@@ -100,7 +100,7 @@ namespace Raster is
 
         // Every frame covers the whole image, replaces what was there, and
         // leaves it in place for the next.
-        _frame_control(sequence: int, delay: int) -> ubyte[] =>
+        _frame_control(sequence: int, delay: int) -> ARRAY[ubyte] =>
             (let out = IO.MemoryStream()
 
              _PNG.write_int(out, sequence)
@@ -116,8 +116,8 @@ namespace Raster is
 
              out.to_array())
 
-        _ACTL: ubyte[] static => [97ub, 99ub, 84ub, 76ub]
-        _FCTL: ubyte[] static => [102ub, 99ub, 84ub, 76ub]
-        _FDAT: ubyte[] static => [102ub, 100ub, 65ub, 84ub]
+        _ACTL: ARRAY[ubyte] static => [97ub, 99ub, 84ub, 76ub]
+        _FCTL: ARRAY[ubyte] static => [102ub, 99ub, 84ub, 76ub]
+        _FDAT: ARRAY[ubyte] static => [102ub, 100ub, 65ub, 84ub]
     si
 si
