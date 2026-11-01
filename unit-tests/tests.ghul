@@ -348,7 +348,7 @@ namespace Raster.Tests is
             image.line(2.0D, 2.0D, 27.0D, 17.0D)
 
             let held: Ghul.Renderable = image
-            let offered = Collections.LIST[(mime: string, content: ubyte[])](held.representations())
+            let offered = Collections.LIST[(mime: string, content: ARRAY[ubyte])](held.representations())
 
             assert offered.count == 1
             assert offered[0].mime =~ "image/png"
@@ -726,7 +726,7 @@ namespace Raster.Tests is
         init() is si
 
         // The kinds of chunk in a PNG, in order.
-        _kinds(bytes: ubyte[]) -> Collections.List[string] =>
+        _kinds(bytes: ARRAY[ubyte]) -> Collections.List[string] =>
             (let kinds = Collections.LIST[string]()
              let at mut = 8
 
@@ -905,7 +905,7 @@ namespace Raster.Tests is
 
         // Enough of a GIF reader to check the writer: the screen size, the
         // global palette, and each frame's pixels as colours, plus the delays.
-        _decode(bytes: ubyte[]) -> (width: int, height: int, palette: Collections.List[int],
+        _decode(bytes: ARRAY[ubyte]) -> (width: int, height: int, palette: Collections.List[int],
                                     frames: Collections.List[Collections.List[int]],
                                     delays: Collections.List[int], loop: int) =>
             (let width = cast int(bytes[6]) | (cast int(bytes[7]) << 8)
@@ -1446,7 +1446,7 @@ namespace Raster.Tests is
     class DEFLATE_Tests is
         init() is si
 
-        _samples: Collections.List[ubyte[]] static =>
+        _samples: Collections.List[ARRAY[ubyte]] static =>
             [
                 Collections.LIST[ubyte]().to_array(),
                 [42ub],
@@ -1455,7 +1455,7 @@ namespace Raster.Tests is
                 (0..70_000) |> map(i => if i % 1000 < 900 then 255ub else cast ubyte(i % 256) fi) |> collect()
             ]
 
-        _platform_decompress(data: ubyte[]) -> ubyte[] static is
+        _platform_decompress(data: ARRAY[ubyte]) -> ARRAY[ubyte] static is
             let stream = System.IO.Compression.DeflateStream(IO.MemoryStream(data), System.IO.Compression.CompressionMode.DECOMPRESS)
             let out = IO.MemoryStream()
 
@@ -1464,7 +1464,7 @@ namespace Raster.Tests is
             return out.to_array()
         si
 
-        _same(expected: ubyte[], actual: ubyte[], what: string) static is
+        _same(expected: ARRAY[ubyte], actual: ARRAY[ubyte], what: string) static is
             assert expected.count == actual.count else "{what}: {actual.count} bytes, expected {expected.count}"
 
             for i in 0..expected.count do

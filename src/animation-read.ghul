@@ -20,7 +20,7 @@ namespace Raster is
         /// `Ghul.NotSupportedException`.
         ///
         /// - bytes: the whole file
-        decode(bytes: ubyte[]) -> ANIMATION static is
+        decode(bytes: ARRAY[ubyte]) -> ANIMATION static is
             let header = _DECODER.header(bytes)
             let palette = _DECODER.palette(bytes)
 
@@ -79,7 +79,7 @@ namespace Raster is
             for index in 0..controls.count do
                 let control = controls[index]
 
-                let before: ubyte[] = if control.dispose == 2 then canvas.rgb() else [] fi
+                let before: ARRAY[ubyte] = if control.dispose == 2 then canvas.rgb() else [] fi
 
                 _DECODER.draw(
                     canvas, data[index].to_array(), header, palette,
@@ -117,10 +117,10 @@ namespace Raster is
         // How long the frame at `index` is shown, in milliseconds.
         delay(index: int) -> int => _delays[index]
 
-        _rgb(index: int) -> ubyte[] =>
+        _rgb(index: int) -> ARRAY[ubyte] =>
             _DECODER.unfilter(_DECODER.inflate(_frames[index]), width, height, 3, false)
 
-        _append(into: LIST[ubyte], bytes: ubyte[], from: int, count: int) static is
+        _append(into: LIST[ubyte], bytes: ARRAY[ubyte], from: int, count: int) static is
             for at in from..from + count do
                 into.add(bytes[at])
             od

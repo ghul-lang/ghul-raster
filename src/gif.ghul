@@ -14,12 +14,12 @@ namespace Raster is
             IO.File.write_all_bytes(path, encode_gif())
         si
 
-        encode_gif() -> ubyte[] =>
+        encode_gif() -> ARRAY[ubyte] =>
             (if _frames.count == 0 then
                  throw System.InvalidOperationException("an animation needs at least one frame")
              fi
 
-             let frames = LIST[ubyte[]]()
+             let frames = LIST[ARRAY[ubyte]]()
 
              for index in 0.._frames.count do
                  frames.add(_rgb(index))
@@ -31,8 +31,8 @@ namespace Raster is
     class _GIF is
         encode(
             width: int, height: int,
-            frames: LIST[ubyte[]], delays: LIST[int], loops: int
-        ) -> ubyte[] static =>
+            frames: LIST[ARRAY[ubyte]], delays: LIST[int], loops: int
+        ) -> ARRAY[ubyte] static =>
             (let palette = choose_palette(frames)
              let lookup = MAP[int, int]()
 
@@ -111,7 +111,7 @@ namespace Raster is
 
         // Colours as 0xRRGGBB. Every distinct colour, in ascending order, if
         // there are no more than 256; otherwise the median cut of them.
-        choose_palette(frames: LIST[ubyte[]]) -> LIST[int] static is
+        choose_palette(frames: LIST[ARRAY[ubyte]]) -> LIST[int] static is
             let counts = MAP[int, int]()
 
             for frame in frames do
@@ -289,7 +289,7 @@ namespace Raster is
 
         // Each pixel's palette index: its own colour's where the palette
         // holds it, otherwise the nearest, lower index winning a tie.
-        _indices(frame: ubyte[], palette: LIST[int], lookup: MAP[int, int]) -> LIST[int] static is
+        _indices(frame: ARRAY[ubyte], palette: LIST[int], lookup: MAP[int, int]) -> LIST[int] static is
             let indices = LIST[int](frame.count / 3)
             let at mut = 0
 
@@ -334,7 +334,7 @@ namespace Raster is
         // LZW as GIF uses it: codes start one bit wider than the minimum
         // size, grow as the table fills, and the table starts again from
         // a clear code once it holds 4096 entries.
-        compress(indices: LIST[int], minimum: int) -> ubyte[] static is
+        compress(indices: LIST[int], minimum: int) -> ARRAY[ubyte] static is
             let out = IO.MemoryStream()
 
             let clear = 1 << minimum
@@ -408,7 +408,7 @@ namespace Raster is
 
         // Image data is split into blocks of up to 255 bytes, each with its
         // length first, and ends with an empty one.
-        _blocks(out: IO.MemoryStream, data: ubyte[]) static is
+        _blocks(out: IO.MemoryStream, data: ARRAY[ubyte]) static is
             let at mut = 0
 
             while at < data.count do
