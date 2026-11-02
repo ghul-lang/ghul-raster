@@ -1,14 +1,14 @@
 use Ghul.Math
 use Ghul.Pipes
 use Raster.AXES
-use Raster.COLOUR_MAP
+use Raster.COLOR_MAP
 use Raster.IMAGE
 use Raster.SHAPES
 
-// A bar chart of leading digits, with one labelled tick for each digit,
-// bars filled together so neighbours meet without a seam, round markers on
+// A bar chart of leading digits, with one labeled tick for each digit,
+// bars filled together so neighbors meet without a seam, round markers on
 // an unequally scaled view, and a key; then a strip of triangles tiled
-// together below a background colour.
+// together below a background color.
 let image = IMAGE(360, 260)
 
 image.clear(250ub, 248ub, 240ub)
@@ -31,19 +31,19 @@ for digit in 1::9 do
     bars.add(
         [(x = left, y = 0.0D), (x = left + 1.0D, y = 0.0D),
          (x = left + 1.0D, y = share), (x = left, y = share)],
-        COLOUR_MAP.viridis(cast double(digit) / 10.0D)
+        COLOR_MAP.viridis(cast double(digit) / 10.0D)
     )
 od
 
 image.fill(bars)
 
-image.colour(200ub, 60ub, 60ub)
+image.color(200ub, 60ub, 60ub)
 
 for digit in 1::9 do
     image.dot(cast double(digit), Ghul.Math.log10(1.0D + 1.0D / cast double(digit)), 3.5D)
 od
 
-image.colour(30ub, 30ub, 30ub)
+image.color(30ub, 30ub, 30ub)
 image.stroke(1.0D)
 image.ring(5.0D, 0.25D, 6.0D)
 image.set_pixel(0, 0)
@@ -59,8 +59,8 @@ let tiles = SHAPES()
 for index in 0..10 do
     let x = cast double(index) * 20.0D
 
-    tiles.add([(x = x, y = 0.0D), (x = x + 20.0D, y = 0.0D), (x = x, y = 40.0D)], COLOUR_MAP.hue(cast double(index) / 10.0D))
-    tiles.add([(x = x + 20.0D, y = 0.0D), (x = x + 20.0D, y = 40.0D), (x = x, y = 40.0D)], COLOUR_MAP.hue(cast double(index) / 10.0D))
+    tiles.add([(x = x, y = 0.0D), (x = x + 20.0D, y = 0.0D), (x = x, y = 40.0D)], COLOR_MAP.hue(cast double(index) / 10.0D))
+    tiles.add([(x = x + 20.0D, y = 0.0D), (x = x + 20.0D, y = 40.0D), (x = x, y = 40.0D)], COLOR_MAP.hue(cast double(index) / 10.0D))
 od
 
 strip.fill(tiles)

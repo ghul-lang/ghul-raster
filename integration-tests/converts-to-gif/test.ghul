@@ -1,6 +1,6 @@
 use Ghul.Math
 use Raster.ANIMATION
-use Raster.COLOUR_MAP
+use Raster.COLOR_MAP
 use Raster.IMAGE
 use IO.Std.write_line
 
@@ -20,10 +20,10 @@ for index in 0..frames do
 
     image.clear()
 
-    image.colour(COLOUR_MAP.viridis(turn))
+    image.color(COLOR_MAP.viridis(turn))
     image.disc(2.0D, 1.5D, 1.2D)
 
-    image.colour(40ub, 40ub, 40ub)
+    image.color(40ub, 40ub, 40ub)
     image.arc(2.0D, 1.5D, 1.2D, 360.0D * turn, 360.0D * turn + 90.0D)
 
     animation.add(image, 60)

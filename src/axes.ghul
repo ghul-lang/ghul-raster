@@ -3,9 +3,9 @@ namespace Raster is
     use Ghul.Pipes
 
     // A frame round the rectangle an image's view was given, with ticks at
-    // round numbers along the bottom and left edges, each labelled, and a
+    // round numbers along the bottom and left edges, each labeled, and a
     // title for either axis if it has one. Drawn in the image's current
-    // colour and stroke, outside the rectangle, so a view given a margin
+    // color and stroke, outside the rectangle, so a view given a margin
     // leaves room for it.
     class AXES is
         _image: IMAGE
@@ -26,7 +26,7 @@ namespace Raster is
         init(image: IMAGE) is
             _image = image
 
-            _keys = LIST[(label: string, colour: (red: ubyte, green: ubyte, blue: ubyte))]()
+            _keys = LIST[(label: string, color: (red: ubyte, green: ubyte, blue: ubyte))]()
 
             label_height = 12.0D
             tick_length = 5.0D
@@ -68,7 +68,7 @@ namespace Raster is
                     _user(x, bottom + tick_length + gap + label_height).y,
                     label_height,
                     tick.label,
-                    Anchor.CENTRE
+                    Anchor.CENTER
                 )
             od
 
@@ -94,7 +94,7 @@ namespace Raster is
                         bottom + tick_length + 2.0D * (gap + label_height)
                     )
 
-                _image.text(at.x, at.y, label_height, x_title, Anchor.CENTRE)
+                _image.text(at.x, at.y, label_height, x_title, Anchor.CENTER)
             fi
 
             if y_title.length > 0 then
@@ -105,7 +105,7 @@ namespace Raster is
                     )
 
                 _image.upward_text(
-                    at.x, at.y, label_height, y_title, Anchor.CENTRE
+                    at.x, at.y, label_height, y_title, Anchor.CENTER
                 )
             fi
 
@@ -193,23 +193,23 @@ namespace Raster is
             fi
 
         // A row of the key in the top right corner inside the frame: a
-        // swatch of the colour, then the label in the axes' own colour.
-        key(label: string, colour: (red: ubyte, green: ubyte, blue: ubyte)) is
-            _keys.add((label = label, colour = colour))
+        // swatch of the color, then the label in the axes' own color.
+        key(label: string, color: (red: ubyte, green: ubyte, blue: ubyte)) is
+            _keys.add((label = label, color = color))
         si
 
         key(label: string, red: ubyte, green: ubyte, blue: ubyte) is
             key(label, (red = red, green = green, blue = blue))
         si
 
-        _keys: LIST[(label: string, colour: (red: ubyte, green: ubyte, blue: ubyte))]
+        _keys: LIST[(label: string, color: (red: ubyte, green: ubyte, blue: ubyte))]
 
         _draw_key(right: double, top: double) is
             if _keys.count == 0 then
                 return
             fi
 
-            let ink = _image.current_colour
+            let ink = _image.current_color
             let pad = label_height / 2.0D
             let row = label_height * 1.6D
 
@@ -228,10 +228,10 @@ namespace Raster is
                 let from = _user(swatch_left, baseline - label_height)
                 let to = _user(swatch_left + label_height, baseline)
 
-                _image.colour(entry.colour)
+                _image.color(entry.color)
                 _image.fill_rectangle(from.x, from.y, to.x, to.y)
 
-                _image.colour(ink)
+                _image.color(ink)
 
                 let at = _user(swatch_left + label_height + pad, baseline)
 

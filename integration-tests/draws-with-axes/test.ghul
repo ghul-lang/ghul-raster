@@ -1,10 +1,10 @@
 use Ghul.Math
 use Raster.Anchor
 use Raster.AXES
-use Raster.COLOUR_MAP
+use Raster.COLOR_MAP
 use Raster.IMAGE
 
-// Axes round a view given a margin, a row of cells coloured from each map,
+// Axes round a view given a margin, a row of cells colored from each map,
 // circles, discs and arcs in the same coordinates, and text anchored three
 // ways against one line.
 let image = IMAGE(400, 300)
@@ -15,12 +15,12 @@ for at in 0..50 do
     let value = cast double(at) / 49.0D
     let x = 0.2D * cast double(at)
 
-    let maps = [COLOUR_MAP.viridis, COLOUR_MAP.cool_warm, COLOUR_MAP.hue]
+    let maps = [COLOR_MAP.viridis, COLOR_MAP.cool_warm, COLOR_MAP.hue]
 
     for row in 0..3 do
         let y = -0.9D + 0.3D * cast double(row)
 
-        image.colour(maps[row](value))
+        image.color(maps[row](value))
 
         image.fill([
             (x = x, y = y),
@@ -31,10 +31,10 @@ for at in 0..50 do
     od
 od
 
-image.colour(200ub, 60ub, 60ub)
+image.color(200ub, 60ub, 60ub)
 image.disc(2.0D, 2.5D, 1.0D)
 
-image.colour(20ub, 60ub, 200ub)
+image.color(20ub, 60ub, 200ub)
 image.stroke(2.0D)
 image.circle(2.0D, 2.5D, 1.4D)
 
@@ -42,13 +42,13 @@ image.stroke(3.0D)
 image.arc(6.0D, 2.0D, 1.5D, 0.0D, 180.0D)
 image.arc(8.0D, 2.0D, 0.5D, 270.0D, 90.0D)
 
-image.colour(0ub, 0ub, 0ub)
+image.color(0ub, 0ub, 0ub)
 image.stroke(1.0D)
 
 image.line(5.0D, 4.6D, 5.0D, 5.9D)
 
 image.text(5.0D, 5.3D, 9.0D, "left", Anchor.LEFT)
-image.text(5.0D, 5.6D, 9.0D, "centre", Anchor.CENTRE)
+image.text(5.0D, 5.6D, 9.0D, "center", Anchor.CENTER)
 image.text(5.0D, 4.8D, 9.0D, "right", Anchor.RIGHT)
 
 let axes = AXES(image)

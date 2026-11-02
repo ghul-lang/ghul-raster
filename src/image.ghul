@@ -2,7 +2,7 @@ namespace Raster is
     use Collections.LIST
     use Ghul.Pipes
 
-    // A truecolour image, drawn into with strokes and written as a PNG.
+    // A truecolor image, drawn into with strokes and written as a PNG.
     //
     // Positions are in whatever coordinates `view` was given, so a program
     // works in the space its problem is stated in. Sizes are in pixels: a
@@ -107,19 +107,19 @@ namespace Raster is
             _stroke = width
         si
 
-        colour(red: ubyte, green: ubyte, blue: ubyte) is
+        color(red: ubyte, green: ubyte, blue: ubyte) is
             _red = red
             _green = green
             _blue = blue
         si
 
-        // The colour being drawn with.
-        current_colour: (red: ubyte, green: ubyte, blue: ubyte) =>
+        // The color being drawn with.
+        current_color: (red: ubyte, green: ubyte, blue: ubyte) =>
             (red = _red, green = _green, blue = _blue)
 
-        // A colour as a colour map gives it.
-        colour(rgb: (red: ubyte, green: ubyte, blue: ubyte)) is
-            colour(rgb.red, rgb.green, rgb.blue)
+        // A color as a color map gives it.
+        color(rgb: (red: ubyte, green: ubyte, blue: ubyte)) is
+            color(rgb.red, rgb.green, rgb.blue)
         si
 
         _to_pixel_x(x: double, y: double) -> double => _xx * x + _yx * y + _x0
@@ -184,7 +184,7 @@ namespace Raster is
             od
         si
 
-        // Every pixel set to one colour, for painting a background.
+        // Every pixel set to one color, for painting a background.
         @IF.dotnet()
         clear(red: ubyte, green: ubyte, blue: ubyte) is
             let row = System.GC.allocate_array[ubyte](width * 3, false)
@@ -215,7 +215,7 @@ namespace Raster is
             od
         si
 
-        // A pixel set to the current colour outright.
+        // A pixel set to the current color outright.
         set_pixel(x: int, y: int) is
             set_pixel(x, y, _red, _green, _blue)
         si
@@ -233,9 +233,9 @@ namespace Raster is
             _pixels[at + 2] = blue
         si
 
-        // Lays `weight` of the current colour over what is already
+        // Lays `weight` of the current color over what is already
         // there, so a program drawing its own shapes can antialias them
-        // rather than choosing a pixel colour outright. A position off
+        // rather than choosing a pixel color outright. A position off
         // the image is ignored, as it is for `set_pixel`.
         blend(x: int, y: int, weight: double) is
             if x < 0 \/ y < 0 \/ x >= width \/ y >= height \/ weight <= 0.0D then
@@ -309,7 +309,7 @@ namespace Raster is
         _SAMPLES: int static => 4
 
         // The polygon these points enclose, filled with the current
-        // colour. The last point joins the first, so a shape need not
+        // color. The last point joins the first, so a shape need not
         // repeat it, and a boundary crossed twice leaves a hole.
         fill(points: Collections.List[(x: double, y: double)]) is
             if points.count < 3 then
@@ -425,7 +425,7 @@ namespace Raster is
             od
         si
 
-        // Every pixel joined to this one and the colour it is, recoloured.
+        // Every pixel joined to this one and the color it is, recolored.
         // Positions are pixels, as they are for `set_pixel`: the region is
         // a property of the image rather than of what the view describes.
         flood_fill(x: int, y: int) is
@@ -491,7 +491,7 @@ namespace Raster is
             text(x, y, height, weight, letters, Anchor.LEFT)
         si
 
-        // Text whose baseline starts, is centred, or ends at (x, y), as
+        // Text whose baseline starts, is centered, or ends at (x, y), as
         // `anchor` says.
         text(
             x: double,
@@ -548,7 +548,7 @@ namespace Raster is
             let along mut =
                 case anchor
                 when Anchor.LEFT then 0.0D
-                when Anchor.CENTRE then -text_width(height, letters) / 2.0D
+                when Anchor.CENTER then -text_width(height, letters) / 2.0D
                 when Anchor.RIGHT then -text_width(height, letters)
                 esac
 

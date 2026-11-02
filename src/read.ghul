@@ -5,7 +5,7 @@ namespace Raster is
 
     // Reading a PNG back in. Eight bits a channel and not interlaced,
     // which is what anything writing one for a program to read produces:
-    // grey, truecolour and indexed, each with or without alpha.
+    // gray, truecolor and indexed, each with or without alpha.
     //
     // An IMAGE carries no alpha of its own, so a transparent pixel is
     // composited onto the white an image starts as.
@@ -62,11 +62,11 @@ namespace Raster is
         SIGNATURE: ARRAY[ubyte] static =>
             [137ub, 80ub, 78ub, 71ub, 13ub, 10ub, 26ub, 10ub]
 
-        // The colour types, by the number of bytes each pixel takes at a
-        // depth of eight: grey, truecolour, indexed, grey with alpha, and
-        // truecolour with alpha.
-        channels_for(colour_type: int) -> int static =>
-            case colour_type
+        // The color types, by the number of bytes each pixel takes at a
+        // depth of eight: gray, truecolor, indexed, gray with alpha, and
+        // truecolor with alpha.
+        channels_for(color_type: int) -> int static =>
+            case color_type
             when 0 then 1
             when 2 then 3
             when 3 then 1
@@ -131,7 +131,7 @@ namespace Raster is
 
             chunks(bytes, (kind, from, to) is
                 if kind =~ "IHDR" then
-                    let colour_type = cast int(bytes[from + 9])
+                    let color_type = cast int(bytes[from + 9])
                     let depth = cast int(bytes[from + 8])
 
                     if depth != 8 then
@@ -140,11 +140,11 @@ namespace Raster is
                         )
                     fi
 
-                    channels = channels_for(colour_type)
+                    channels = channels_for(color_type)
 
                     if channels == 0 then
                         throw Exception(
-                            "colour type {colour_type} is not read here"
+                            "color type {color_type} is not read here"
                         )
                     fi
 
@@ -156,7 +156,7 @@ namespace Raster is
 
                     width = be32(bytes, from)
                     height = be32(bytes, from + 4)
-                    indexed = colour_type == 3
+                    indexed = color_type == 3
                     found = true
                 fi
             si)
@@ -227,9 +227,9 @@ namespace Raster is
             when 1 then
                 (red = raw[at], green = raw[at], blue = raw[at])
             when 2 then
-                (let grey = over_white(raw[at], raw[at + 1])
+                (let gray = over_white(raw[at], raw[at + 1])
 
-                 (red = grey, green = grey, blue = grey))
+                 (red = gray, green = gray, blue = gray))
             when 3 then
                 (red = raw[at], green = raw[at + 1], blue = raw[at + 2])
             else

@@ -3,17 +3,17 @@ namespace Raster is
     use Ghul.Pipes
 
     // Polygons to be filled together by `IMAGE.fill`, each with its own
-    // colour, so that shapes sharing an edge meet without a seam.
+    // color, so that shapes sharing an edge meet without a seam.
     class SHAPES is
         _shapes: LIST[(
             points: Collections.List[(x: double, y: double)],
-            colour: (red: ubyte, green: ubyte, blue: ubyte)
+            color: (red: ubyte, green: ubyte, blue: ubyte)
         )]
 
         init() is
             _shapes = LIST[(
                 points: Collections.List[(x: double, y: double)],
-                colour: (red: ubyte, green: ubyte, blue: ubyte)
+                color: (red: ubyte, green: ubyte, blue: ubyte)
             )]()
         si
 
@@ -21,14 +21,14 @@ namespace Raster is
 
         all: Collections.List[(
             points: Collections.List[(x: double, y: double)],
-            colour: (red: ubyte, green: ubyte, blue: ubyte)
+            color: (red: ubyte, green: ubyte, blue: ubyte)
         )] => _shapes
 
         add(
             points: Collections.List[(x: double, y: double)],
-            colour: (red: ubyte, green: ubyte, blue: ubyte)
+            color: (red: ubyte, green: ubyte, blue: ubyte)
         ) is
-            _shapes.add((points = points, colour = colour))
+            _shapes.add((points = points, color = color))
         si
 
         add(points: Collections.List[(x: double, y: double)], red: ubyte, green: ubyte, blue: ubyte) is
@@ -42,12 +42,12 @@ namespace Raster is
             fill([(x = x0, y = y0), (x = x1, y = y0), (x = x1, y = y1), (x = x0, y = y1)])
         si
 
-        // The shapes filled together, each in its own colour. Filled one at a
+        // The shapes filled together, each in its own color. Filled one at a
         // time, two shapes sharing an edge would each only partly cover the
         // pixels along it, and the background would show through between
         // them. Filled together, what each covers of a pixel is added up
         // first, so shapes that meet cover it completely. Where shapes
-        // overlap, their colours mix.
+        // overlap, their colors mix.
         fill(shapes: SHAPES) is
             let outlines = LIST[(xs: ARRAY[double], ys: ARRAY[double], top: int, bottom: int)]()
 
@@ -96,7 +96,7 @@ namespace Raster is
                         continue
                     fi
 
-                    let colour = shapes.all[index].colour
+                    let color = shapes.all[index].color
 
                     let first mut = width
                     let last mut = 0
@@ -127,9 +127,9 @@ namespace Raster is
 
                         if covered > 0.0D then
                             total[x] = total[x] + covered
-                            red[x] = red[x] + covered * cast double(colour.red)
-                            green[x] = green[x] + covered * cast double(colour.green)
-                            blue[x] = blue[x] + covered * cast double(colour.blue)
+                            red[x] = red[x] + covered * cast double(color.red)
+                            green[x] = green[x] + covered * cast double(color.green)
+                            blue[x] = blue[x] + covered * cast double(color.blue)
                         fi
 
                         coverage[x] = 0.0D
@@ -162,7 +162,7 @@ namespace Raster is
             od
         si
 
-        // A filled round mark centred on a point in user coordinates, with
+        // A filled round mark centered on a point in user coordinates, with
         // its radius in pixels, so it stays round however the view is
         // scaled: the marker for a point on a plot.
         dot(x: double, y: double, radius: double) is

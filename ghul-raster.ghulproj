@@ -6,8 +6,8 @@
     <Title>ghūl raster graphics</Title>
     <PackageId>ghul.raster</PackageId>
     <Authors>degory</Authors>
-    <Description>Drawing into a PNG from ghūl: antialiased strokes and circles, an affine view, axes, colour maps and stroke-font text, in managed code with no native dependency</Description>
-    <PackageDescription>Drawing into a PNG from ghūl: antialiased strokes and circles, an affine view, axes, colour maps and stroke-font text, in managed code with no native dependency</PackageDescription>
+    <Description>Drawing into a PNG from ghūl: antialiased strokes and circles, an affine view, axes, color maps and stroke-font text, in managed code with no native dependency</Description>
+    <PackageDescription>Drawing into a PNG from ghūl: antialiased strokes and circles, an affine view, axes, color maps and stroke-font text, in managed code with no native dependency</PackageDescription>
     <PackageTags>ghul;ghūl;graphics;png;raster;plotting</PackageTags>
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <PackageProjectUrl>https://ghul.dev</PackageProjectUrl>

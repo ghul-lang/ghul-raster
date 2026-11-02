@@ -1,6 +1,6 @@
 use Ghul.Math
 use Raster.ANIMATION
-use Raster.COLOUR_MAP
+use Raster.COLOR_MAP
 use Raster.IMAGE
 
 // A pendulum swinging, drawn into one image frame after frame and written as
@@ -19,11 +19,11 @@ for index in 0..frames do
 
     image.clear()
 
-    image.colour(120ub, 120ub, 120ub)
+    image.color(120ub, 120ub, 120ub)
     image.stroke(2.0D)
     image.line(0.0D, 0.0D, x, y)
 
-    image.colour(COLOUR_MAP.hue(cast double(index) / cast double(frames)))
+    image.color(COLOR_MAP.hue(cast double(index) / cast double(frames)))
     image.disc(x, y, 0.12D)
 
     animation.add(image, 80)

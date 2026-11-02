@@ -4,7 +4,7 @@ let image = IMAGE(300, 240)
 
 image.view(0.0D, 0.0D, 300.0D, 240.0D)
 
-image.colour(200ub, 60ub, 60ub)
+image.color(200ub, 60ub, 60ub)
 
 image.fill([
     (x = 40.0D, y = 40.0D),
@@ -12,7 +12,7 @@ image.fill([
     (x = 150.0D, y = 200.0D)
 ])
 
-image.colour(0ub, 0ub, 160ub)
+image.color(0ub, 0ub, 160ub)
 image.stroke(2.0D)
 
 image.line([
@@ -23,7 +23,7 @@ image.line([
     (x = 20.0D, y = 20.0D)
 ])
 
-image.colour(60ub, 160ub, 60ub)
+image.color(60ub, 160ub, 60ub)
 
 image.flood_fill(150, 10)
 
