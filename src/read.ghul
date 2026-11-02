@@ -2,7 +2,6 @@ namespace Raster is
     use System.Exception
     use Collections.LIST
     use Ghul.Pipes
-    use Math = System.Math
 
     // Reading a PNG back in. Eight bits a channel and not interlaced,
     // which is what anything writing one for a program to read produces:
@@ -269,9 +268,9 @@ namespace Raster is
         paeth(left: int, above: int, corner: int) -> int static =>
             (let estimate = left + above - corner
 
-             let from_left = Math.abs(estimate - left)
-             let from_above = Math.abs(estimate - above)
-             let from_corner = Math.abs(estimate - corner)
+             let from_left = Ghul.Math.abs(estimate - left)
+             let from_above = Ghul.Math.abs(estimate - above)
+             let from_corner = Ghul.Math.abs(estimate - corner)
 
              if from_left <= from_above /\ from_left <= from_corner then
                  left

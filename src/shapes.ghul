@@ -1,7 +1,6 @@
 namespace Raster is
     use Collections.LIST
     use Ghul.Pipes
-    use Math = System.Math
 
     // Polygons to be filled together by `IMAGE.fill`, each with its own
     // colour, so that shapes sharing an edge meet without a seam.
@@ -76,8 +75,8 @@ namespace Raster is
 
                 outlines.add((xs = xs, ys = ys, top = first, bottom = last))
 
-                top = Math.min(top, first)
-                bottom = Math.max(bottom, last)
+                top = Ghul.Math.min(top, first)
+                bottom = Ghul.Math.max(bottom, last)
             od
 
             let coverage = repeat(0.0D, width) |> collect_mutable()
@@ -110,8 +109,8 @@ namespace Raster is
                         let crossings = _crossings(outline.xs, outline.ys, at)
 
                         if crossings.count >= 2 then
-                            first = Math.min(first, _clamp(crossings[0], 0, width))
-                            last = Math.max(last, _clamp(crossings[crossings.count - 1] + 1.0D, 0, width))
+                            first = Ghul.Math.min(first, _clamp(crossings[0], 0, width))
+                            last = Ghul.Math.max(last, _clamp(crossings[crossings.count - 1] + 1.0D, 0, width))
                         fi
 
                         let pair mut = 0
@@ -136,8 +135,8 @@ namespace Raster is
                         coverage[x] = 0.0D
                     od
 
-                    row_first = Math.min(row_first, first)
-                    row_last = Math.max(row_last, last)
+                    row_first = Ghul.Math.min(row_first, first)
+                    row_last = Ghul.Math.max(row_last, last)
                 od
 
                 for x in row_first..row_last do
@@ -182,16 +181,16 @@ namespace Raster is
             let half = _stroke / 2.0D
             let reach = radius + half + 1.0D
 
-            for py in cast int(Math.floor(cy - reach))::cast int(Math.ceiling(cy + reach)) do
-                for px in cast int(Math.floor(cx - reach))::cast int(Math.ceiling(cx + reach)) do
+            for py in cast int(Ghul.Math.floor(cy - reach))::cast int(Ghul.Math.ceiling(cy + reach)) do
+                for px in cast int(Ghul.Math.floor(cx - reach))::cast int(Ghul.Math.ceiling(cx + reach)) do
                     let dx = cast double(px) + 0.5D - cx
                     let dy = cast double(py) + 0.5D - cy
-                    let away = Math.sqrt(dx * dx + dy * dy)
+                    let away = Ghul.Math.sqrt(dx * dx + dy * dy)
 
                     if filled then
                         blend(px, py, radius + 0.5D - away)
                     else
-                        blend(px, py, half + 0.5D - Math.abs(away - radius))
+                        blend(px, py, half + 0.5D - Ghul.Math.abs(away - radius))
                     fi
                 od
             od

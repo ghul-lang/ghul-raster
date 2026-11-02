@@ -1,4 +1,4 @@
-use System.Math
+use Ghul.Math
 use Raster.ANIMATION
 use Raster.COLOUR_MAP
 use Raster.IMAGE
@@ -13,9 +13,9 @@ let animation = ANIMATION(160, 120)
 image.view(-1.0D, -1.1D, 1.0D, 0.4D)
 
 for index in 0..frames do
-    let angle = 0.6D * Math.cos(2.0D * Math.pi * cast double(index) / cast double(frames))
-    let x = Math.sin(angle)
-    let y = -Math.cos(angle)
+    let angle = 0.6D * Ghul.Math.cos(2.0D * Ghul.Math.pi * cast double(index) / cast double(frames))
+    let x = Ghul.Math.sin(angle)
+    let y = -Ghul.Math.cos(angle)
 
     image.clear()
 

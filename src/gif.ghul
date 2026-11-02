@@ -1,7 +1,6 @@
 namespace Raster is
     use Collections.LIST
     use Collections.MAP
-    use Math = System.Math
     use Ghul.Pipes
 
     // Writing an animation as a GIF, for somewhere that animates a GIF but
@@ -68,12 +67,12 @@ namespace Raster is
                  out.write([78ub, 69ub, 84ub, 83ub, 67ub, 65ub, 80ub, 69ub, 50ub, 46ub, 48ub], 0, 11)
                  out.write([3ub, 1ub], 0, 2)
 
-                 _short(out, if loops == 0 then 0 else Math.min(loops - 1, 65535) fi)
+                 _short(out, if loops == 0 then 0 else Ghul.Math.min(loops - 1, 65535) fi)
 
                  out.write_byte(0ub)
              fi
 
-             let minimum = Math.max(2, bits)
+             let minimum = Ghul.Math.max(2, bits)
 
              for index in 0..frames.count do
                  out.write([0x21ub, 0xF9ub, 4ub, 4ub], 0, 4)
@@ -102,7 +101,7 @@ namespace Raster is
         // frame of less than two hundredths for a tenth, so shorter delays
         // are lengthened to two hundredths rather than slowed five times.
         centiseconds(milliseconds: int) -> int static =>
-            Math.min(65535, Math.max(2, (milliseconds + 5) / 10))
+            Ghul.Math.min(65535, Ghul.Math.max(2, (milliseconds + 5) / 10))
 
         _short(out: IO.MemoryStream, value: int) static is
             out.write_byte(cast ubyte(value & 0xFF))
@@ -281,8 +280,8 @@ namespace Raster is
              for colour in box do
                  let value = _channel(colour, channel)
 
-                 low = Math.min(low, value)
-                 high = Math.max(high, value)
+                 low = Ghul.Math.min(low, value)
+                 high = Ghul.Math.max(high, value)
              od
 
              high - low)
@@ -412,7 +411,7 @@ namespace Raster is
             let at mut = 0
 
             while at < data.count do
-                let length = Math.min(255, data.count - at)
+                let length = Ghul.Math.min(255, data.count - at)
 
                 out.write_byte(cast ubyte(length))
                 out.write(data, at, length)

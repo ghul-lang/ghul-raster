@@ -1,4 +1,4 @@
-use System.Math
+use Ghul.Math
 use Ghul.Pipes
 use Raster.AXES
 use Raster.COLOUR_MAP
@@ -40,7 +40,7 @@ image.fill(bars)
 image.colour(200ub, 60ub, 60ub)
 
 for digit in 1::9 do
-    image.dot(cast double(digit), Math.log10(1.0D + 1.0D / cast double(digit)), 3.5D)
+    image.dot(cast double(digit), Ghul.Math.log10(1.0D + 1.0D / cast double(digit)), 3.5D)
 od
 
 image.colour(30ub, 30ub, 30ub)

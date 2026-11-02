@@ -1,4 +1,4 @@
-use System.Math
+use Ghul.Math
 use Raster.IMAGE
 
 // Everything the library does, in one picture: a view in the coordinates the
@@ -27,7 +27,7 @@ for at in 0..steps do
     let x0 = 6.5D * cast double(at) / cast double(steps)
     let x1 = 6.5D * cast double(at + 1) / cast double(steps)
 
-    image.line(x0, Math.sin(x0), x1, Math.sin(x1))
+    image.line(x0, Ghul.Math.sin(x0), x1, Ghul.Math.sin(x1))
 od
 
 image.colour(0ub, 0ub, 0ub)

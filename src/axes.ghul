@@ -1,7 +1,6 @@
 namespace Raster is
     use Collections.LIST
     use Ghul.Pipes
-    use Math = System.Math
 
     // A frame round the rectangle an image's view was given, with ticks at
     // round numbers along the bottom and left edges, each labelled, and a
@@ -39,18 +38,18 @@ namespace Raster is
         draw() is
             let bounds = _image.bounds
 
-            let low_x = Math.min(bounds.left, bounds.right)
-            let high_x = Math.max(bounds.left, bounds.right)
-            let low_y = Math.min(bounds.bottom, bounds.top)
-            let high_y = Math.max(bounds.bottom, bounds.top)
+            let low_x = Ghul.Math.min(bounds.left, bounds.right)
+            let high_x = Ghul.Math.max(bounds.left, bounds.right)
+            let low_y = Ghul.Math.min(bounds.bottom, bounds.top)
+            let high_y = Ghul.Math.max(bounds.bottom, bounds.top)
 
             let corner = _image.to_pixel(bounds.left, bounds.bottom)
             let opposite = _image.to_pixel(bounds.right, bounds.top)
 
-            let left = Math.min(corner.x, opposite.x)
-            let right = Math.max(corner.x, opposite.x)
-            let top = Math.min(corner.y, opposite.y)
-            let bottom = Math.max(corner.y, opposite.y)
+            let left = Ghul.Math.min(corner.x, opposite.x)
+            let right = Ghul.Math.max(corner.x, opposite.x)
+            let top = Ghul.Math.min(corner.y, opposite.y)
+            let bottom = Ghul.Math.max(corner.y, opposite.y)
 
             _line(left, top, right, top)
             _line(right, top, right, bottom)
@@ -85,7 +84,7 @@ namespace Raster is
 
                 _image.text(at.x, at.y, label_height, text, Anchor.RIGHT)
 
-                widest = Math.max(widest, _image.text_width(label_height, text))
+                widest = Ghul.Math.max(widest, _image.text_width(label_height, text))
             od
 
             if x_title.length > 0 then
@@ -129,20 +128,20 @@ namespace Raster is
             for _ in 0..3 do
                 let across =
                     _ticks_along(
-                        _x_ticks, Math.min(left, right), Math.max(left, right),
+                        _x_ticks, Ghul.Math.min(left, right), Ghul.Math.max(left, right),
                         cast double(_image.width) - margins.left - margins.right, 80.0D
                     )
 
                 let up =
                     _ticks_along(
-                        _y_ticks, Math.min(bottom, top), Math.max(bottom, top),
+                        _y_ticks, Ghul.Math.min(bottom, top), Ghul.Math.max(bottom, top),
                         cast double(_image.height) - margins.bottom - margins.top, 50.0D
                     )
 
                 let widest mut = 0.0D
 
                 for tick in up do
-                    widest = Math.max(widest, _image.text_width(label_height, tick.label))
+                    widest = Ghul.Math.max(widest, _image.text_width(label_height, tick.label))
                 od
 
                 let last_label =
@@ -159,7 +158,7 @@ namespace Raster is
                     bottom =
                         tick_length + gap + label_height + pad +
                         (if x_title.length > 0 then gap + label_height * 1.5D else 0.0D fi),
-                    right = Math.max(pad, last_label / 2.0D + pad),
+                    right = Ghul.Math.max(pad, last_label / 2.0D + pad),
                     top = label_height / 2.0D + pad
                 )
             od
@@ -217,7 +216,7 @@ namespace Raster is
             let widest mut = 0.0D
 
             for entry in _keys do
-                widest = Math.max(widest, _image.text_width(label_height, entry.label))
+                widest = Ghul.Math.max(widest, _image.text_width(label_height, entry.label))
             od
 
             let swatch_left = right - pad - widest - pad - label_height
@@ -249,8 +248,8 @@ namespace Raster is
             fi
 
             let spacing = step(low, high, most)
-            let first = cast int(Math.ceiling(low / spacing - 0.000001D))
-            let last = cast int(Math.floor(high / spacing + 0.000001D))
+            let first = cast int(Ghul.Math.ceiling(low / spacing - 0.000001D))
+            let last = cast int(Ghul.Math.floor(high / spacing + 0.000001D))
 
             let found = LIST[double]()
 
@@ -264,7 +263,7 @@ namespace Raster is
         // The distance between ticks that `ticks` chooses.
         step(low: double, high: double, most: int) -> double static =>
             (let rough = (high - low) / cast double(most)
-             let power = Math.pow(10.0D, Math.floor(Math.log10(rough)))
+             let power = Ghul.Math.pow(10.0D, Ghul.Math.floor(Ghul.Math.log10(rough)))
              let scaled = rough / power
 
              if scaled <= 1.0D then
@@ -284,10 +283,10 @@ namespace Raster is
                  if ticks.count > 1 then ticks[1] - ticks[0] else 1.0D fi
 
              let places =
-                 Math.max(0, cast int(-Math.floor(Math.log10(step) + 0.000001D)))
+                 Ghul.Math.max(0, cast int(-Ghul.Math.floor(Ghul.Math.log10(step) + 0.000001D)))
 
              let shown =
-                 if Math.abs(value) < step * 0.000001D then 0.0D else value fi
+                 if Ghul.Math.abs(value) < step * 0.000001D then 0.0D else value fi
 
              _invariant(shown, "F{places}"))
 
@@ -302,7 +301,7 @@ namespace Raster is
             value.to_string(format)
 
         _most(pixels: double, spacing: double) -> int static =>
-            Math.max(2, cast int(pixels / spacing))
+            Ghul.Math.max(2, cast int(pixels / spacing))
 
         _user(x: double, y: double) -> (x: double, y: double) =>
             _image.to_user(x, y)
