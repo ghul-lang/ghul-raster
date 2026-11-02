@@ -2,7 +2,7 @@ namespace Raster is
     // Which part of a line of text sits at the position it is drawn at.
     enum Anchor is
         LEFT,
-        CENTRE,
+        CENTER,
         RIGHT
     si
 si

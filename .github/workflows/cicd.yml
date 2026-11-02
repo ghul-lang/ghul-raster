@@ -13,7 +13,7 @@ on:
   push:
     branches: [master, main]
 
-# Serialise pushes to main so two concurrent merges don't compute the same
+# Serialize pushes to main so two concurrent merges don't compute the same
 # version number; for pull requests, cancel any superseded run.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

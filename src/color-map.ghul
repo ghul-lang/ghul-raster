@@ -1,12 +1,12 @@
 namespace Raster is
 
-    // Colours for values, each map taking a number from 0 to 1 to a colour
-    // `IMAGE.colour` accepts, so a heat map colours every cell alike rather
+    // Colors for values, each map taking a number from 0 to 1 to a color
+    // `IMAGE.color` accepts, so a heat map colors every cell alike rather
     // than inventing a ramp of its own.
-    class COLOUR_MAP is
+    class COLOR_MAP is
         // Dark blue through green to yellow, getting steadily lighter, for a
         // value that only grows: a count, a distance, an intensity. Values
-        // outside 0 to 1 take the colour of the end they are beyond.
+        // outside 0 to 1 take the color of the end they are beyond.
         viridis(value: double) -> (red: ubyte, green: ubyte, blue: ubyte) static =>
             _between(
                 [
@@ -17,9 +17,9 @@ namespace Raster is
                 value
             )
 
-        // Blue through pale grey to red, for a value either side of a middle
+        // Blue through pale gray to red, for a value either side of a middle
         // that means nothing in particular: a difference, a correlation. The
-        // middle is 0.5, so a range centred on zero is shifted and halved
+        // middle is 0.5, so a range centered on zero is shifted and halved
         // before it is looked up. Values outside 0 to 1 are clamped.
         cool_warm(value: double) -> (red: ubyte, green: ubyte, blue: ubyte) static =>
             _between(
@@ -31,7 +31,7 @@ namespace Raster is
                 value
             )
 
-        // Fully saturated colour around the colour wheel, red at 0 and back
+        // Fully saturated color around the color wheel, red at 0 and back
         // to red at 1, for a value that wraps: an angle, a phase, a
         // remainder. A value outside 0 to 1 wraps round the wheel with it.
         hue(value: double) -> (red: ubyte, green: ubyte, blue: ubyte) static =>
@@ -66,7 +66,7 @@ namespace Raster is
                 cast ubyte(value + 0.5D)
             fi
 
-        // Evenly spaced colours, with the space between each pair filled by
+        // Evenly spaced colors, with the space between each pair filled by
         // mixing its ends.
         _between(
             stops: (int, int, int)[], value: double

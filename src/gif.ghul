@@ -4,9 +4,9 @@ namespace Raster is
     use Ghul.Pipes
 
     // Writing an animation as a GIF, for somewhere that animates a GIF but
-    // not a PNG. A GIF holds at most 256 colours, so the frames share one
-    // palette: every colour they use if there are few enough, otherwise the
-    // colours that fill a visible share of the frames, kept exactly, and a
+    // not a PNG. A GIF holds at most 256 colors, so the frames share one
+    // palette: every color they use if there are few enough, otherwise the
+    // colors that fill a visible share of the frames, kept exactly, and a
     // median cut of the rest for what remains, each pixel taking the nearest.
     partial ANIMATION is
         write_gif(path: string) is
@@ -53,11 +53,11 @@ namespace Raster is
              out.write_byte(0ub)
 
              for index in 0..(1 << bits) do
-                 let colour = if index < palette.count then palette[index] else 0 fi
+                 let color = if index < palette.count then palette[index] else 0 fi
 
-                 out.write_byte(cast ubyte((colour >> 16) & 0xFF))
-                 out.write_byte(cast ubyte((colour >> 8) & 0xFF))
-                 out.write_byte(cast ubyte(colour & 0xFF))
+                 out.write_byte(cast ubyte((color >> 16) & 0xFF))
+                 out.write_byte(cast ubyte((color >> 8) & 0xFF))
+                 out.write_byte(cast ubyte(color & 0xFF))
              od
 
              // Plays once without the looping extension; otherwise it counts
@@ -108,7 +108,7 @@ namespace Raster is
             out.write_byte(cast ubyte((value >> 8) & 0xFF))
         si
 
-        // Colours as 0xRRGGBB. Every distinct colour, in ascending order, if
+        // Colors as 0xRRGGBB. Every distinct color, in ascending order, if
         // there are no more than 256; otherwise the median cut of them.
         choose_palette(frames: LIST[ARRAY[ubyte]]) -> LIST[int] static is
             let counts = MAP[int, int]()
@@ -117,40 +117,40 @@ namespace Raster is
                 let at mut = 0
 
                 while at < frame.count do
-                    let colour =
+                    let color =
                         (cast int(frame[at]) << 16) |
                         (cast int(frame[at + 1]) << 8) |
                         cast int(frame[at + 2])
 
-                    if counts.contains_key(colour) then
-                        counts[colour] = counts[colour] + 1
+                    if counts.contains_key(color) then
+                        counts[color] = counts[color] + 1
                     else
-                        counts[colour] = 1
+                        counts[color] = 1
                     fi
 
                     at = at + 3
                 od
             od
 
-            let colours = LIST[int](counts.keys)
+            let colors = LIST[int](counts.keys)
 
-            colours.sort()
+            colors.sort()
 
-            if colours.count <= 256 then
-                return colours
+            if colors.count <= 256 then
+                return colors
             fi
 
-            // A colour that fills a visible share of the frames, a flat
+            // A color that fills a visible share of the frames, a flat
             // background or a line, keeps its own entry, so averaging with
-            // its neighbours cannot shift it; the rest share what is left.
+            // its neighbors cannot shift it; the rest share what is left.
             let total mut = 0L
 
-            for colour in colours do
-                total = total + cast long(counts[colour])
+            for color in colors do
+                total = total + cast long(counts[color])
             od
 
-            let frequent = colours
-                |> filter(colour => cast long(counts[colour]) * 1000L >= total)
+            let frequent = colors
+                |> filter(color => cast long(counts[color]) * 1000L >= total)
                 |> collect_mutable()
 
             frequent.sort((a, b) => counts[b] - counts[a])
@@ -159,7 +159,7 @@ namespace Raster is
 
             kept.sort()
 
-            let rest = colours |> filter(colour => !kept.contains(colour)) |> collect_mutable()
+            let rest = colors |> filter(color => !kept.contains(color)) |> collect_mutable()
             let slots = 256 - kept.count
 
             if rest.count <= slots then
@@ -173,13 +173,13 @@ namespace Raster is
             return kept
         si
 
-        // Splits the colours into boxes, each time halving the box that
+        // Splits the colors into boxes, each time halving the box that
         // spans the most along any one channel at the median pixel along
         // that channel, and returns the pixel-weighted mean of each box.
-        _median_cut(colours: LIST[int], counts: MAP[int, int], wanted: int) -> LIST[int] static is
+        _median_cut(colors: LIST[int], counts: MAP[int, int], wanted: int) -> LIST[int] static is
             let boxes = LIST[LIST[int]]()
 
-            boxes.add(colours)
+            boxes.add(colors)
 
             while boxes.count < wanted do
                 let widest mut = -1
@@ -214,8 +214,8 @@ namespace Raster is
 
                 let total mut = 0
 
-                for colour in box do
-                    total = total + counts[colour]
+                for color in box do
+                    total = total + counts[color]
                 od
 
                 let seen mut = 0
@@ -243,17 +243,17 @@ namespace Raster is
                 let blue mut = 0L
                 let dominant mut = box[0]
 
-                for colour in box do
-                    let count = cast long(counts[colour])
+                for color in box do
+                    let count = cast long(counts[color])
 
-                    if counts[colour] > counts[dominant] then
-                        dominant = colour
+                    if counts[color] > counts[dominant] then
+                        dominant = color
                     fi
 
                     weight = weight + count
-                    red = red + count * cast long(_channel(colour, 0))
-                    green = green + count * cast long(_channel(colour, 1))
-                    blue = blue + count * cast long(_channel(colour, 2))
+                    red = red + count * cast long(_channel(color, 0))
+                    green = green + count * cast long(_channel(color, 1))
+                    blue = blue + count * cast long(_channel(color, 2))
                 od
 
                 if cast long(counts[dominant]) * 2L >= weight then
@@ -270,15 +270,15 @@ namespace Raster is
             return palette
         si
 
-        _channel(colour: int, channel: int) -> int static =>
-            (colour >> (16 - 8 * channel)) & 0xFF
+        _channel(color: int, channel: int) -> int static =>
+            (color >> (16 - 8 * channel)) & 0xFF
 
         _span(box: LIST[int], channel: int) -> int static =>
             (let low mut = 255
              let high mut = 0
 
-             for colour in box do
-                 let value = _channel(colour, channel)
+             for color in box do
+                 let value = _channel(color, channel)
 
                  low = Ghul.Math.min(low, value)
                  high = Ghul.Math.max(high, value)
@@ -286,23 +286,23 @@ namespace Raster is
 
              high - low)
 
-        // Each pixel's palette index: its own colour's where the palette
+        // Each pixel's palette index: its own color's where the palette
         // holds it, otherwise the nearest, lower index winning a tie.
         _indices(frame: ARRAY[ubyte], palette: LIST[int], lookup: MAP[int, int]) -> LIST[int] static is
             let indices = LIST[int](frame.count / 3)
             let at mut = 0
 
             while at < frame.count do
-                let colour =
+                let color =
                     (cast int(frame[at]) << 16) |
                     (cast int(frame[at + 1]) << 8) |
                     cast int(frame[at + 2])
 
-                if !lookup.contains_key(colour) then
-                    lookup[colour] = _nearest(colour, palette)
+                if !lookup.contains_key(color) then
+                    lookup[color] = _nearest(color, palette)
                 fi
 
-                indices.add(lookup[colour])
+                indices.add(lookup[color])
 
                 at = at + 3
             od
@@ -310,14 +310,14 @@ namespace Raster is
             return indices
         si
 
-        _nearest(colour: int, palette: LIST[int]) -> int static is
+        _nearest(color: int, palette: LIST[int]) -> int static is
             let best mut = 0
             let best_distance mut = 0x7FFFFFFF
 
             for index in 0..palette.count do
-                let red = _channel(colour, 0) - _channel(palette[index], 0)
-                let green = _channel(colour, 1) - _channel(palette[index], 1)
-                let blue = _channel(colour, 2) - _channel(palette[index], 2)
+                let red = _channel(color, 0) - _channel(palette[index], 0)
+                let green = _channel(color, 1) - _channel(palette[index], 1)
+                let blue = _channel(color, 2) - _channel(palette[index], 2)
 
                 let distance = red * red + green * green + blue * blue
 

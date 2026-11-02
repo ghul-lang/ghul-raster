@@ -8,17 +8,17 @@ let image = IMAGE(320, 200)
 
 image.view(-0.5D, -1.4D, 6.8D, 1.4D)
 
-image.colour(200ub, 200ub, 200ub)
+image.color(200ub, 200ub, 200ub)
 image.stroke(1.0D)
 
 for n in 0::6 do
     image.line(cast double(n), -1.2D, cast double(n), 1.2D)
 od
 
-image.colour(120ub, 120ub, 120ub)
+image.color(120ub, 120ub, 120ub)
 image.line(-0.3D, 0.0D, 6.6D, 0.0D)
 
-image.colour(20ub, 60ub, 200ub)
+image.color(20ub, 60ub, 200ub)
 image.stroke(2.0D)
 
 let steps = 200
@@ -30,7 +30,7 @@ for at in 0..steps do
     image.line(x0, Ghul.Math.sin(x0), x1, Ghul.Math.sin(x1))
 od
 
-image.colour(0ub, 0ub, 0ub)
+image.color(0ub, 0ub, 0ub)
 image.text(0.1D, 1.15D, 14.0D, "sin x")
 
 image.write("plot.png")

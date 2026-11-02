@@ -1,6 +1,6 @@
 namespace Raster is
 
-    // Circles, discs and arcs, centred and sized in user coordinates. A view
+    // Circles, discs and arcs, centered and sized in user coordinates. A view
     // that scales x and y differently draws each of them as an ellipse, as it
     // does any other shape.
     partial IMAGE is
@@ -8,7 +8,7 @@ namespace Raster is
             _round(x, y, radius, 0.0D, 360.0D, false)
         si
 
-        // The circle filled with the current colour.
+        // The circle filled with the current color.
         disc(x: double, y: double, radius: double) is
             _round(x, y, radius, 0.0D, 360.0D, true)
         si
@@ -79,7 +79,7 @@ namespace Raster is
             od
         si
 
-        // How far an offset from the centre lies outside the edge, in
+        // How far an offset from the center lies outside the edge, in
         // pixels and negative inside, and the angle it lies at in user
         // coordinates. The distance is exact for a circle and a close
         // estimate for an ellipse, which is all antialiasing asks of it.

@@ -46,7 +46,7 @@ jobs:
 
         Read these files first, in order:
         1. .github/claude-review.md - what this repo is, and what to watch for in it
-        2. README.md - the library's documented behaviour, which a change must keep true
+        2. README.md - the library's documented behavior, which a change must keep true
         3. GHUL.md - ghūl language reference, consult as needed while reading the diff
     secrets:
       claude-oauth-token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}

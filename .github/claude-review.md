@@ -18,7 +18,7 @@ WebAssembly in the ghūl playground, where a native library cannot load.
 
 `README.md` is the documentation and is packed into the package, so it is the
 contract: coordinates and `view`, strokes, shapes, pixels, reading a PNG, the
-turtle, text in a Hershey stroke font, axes and colour maps, and the
+turtle, text in a Hershey stroke font, axes and color maps, and the
 `<<image name.png>>` line `show` prints so that whatever displays a program's
 output knows where a picture belongs.
 
@@ -51,7 +51,7 @@ package and ships the same assembly to the browser.
 - **Out-of-range input.** Positions outside the image are ignored by the
   writers rather than thrown on; a new primitive that indexes the buffer
   directly needs the same clipping.
-- **The README stays true.** A change in behaviour with no matching change to
+- **The README stays true.** A change in behavior with no matching change to
   the README is a finding, and so is README text describing something the
   diff does not do.
 - **Tests carry an image.** A new primitive wants an integration test whose
