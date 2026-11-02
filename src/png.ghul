@@ -1,6 +1,5 @@
 namespace Raster is
     use Collections.LIST
-    use Math = System.Math
 
     // What writing a PNG takes beyond the pixels: chunks, their checksums,
     // and the compressed image data. A still image and an animation are
@@ -105,7 +104,7 @@ namespace Raster is
              let at mut = 0
 
              while at < data.count do
-                 let stop = Math.min(at + 5552, data.count)
+                 let stop = Ghul.Math.min(at + 5552, data.count)
 
                  while at < stop do
                      low = low + cast long(data[at])

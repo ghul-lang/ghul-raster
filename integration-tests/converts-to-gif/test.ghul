@@ -1,4 +1,4 @@
-use System.Math
+use Ghul.Math
 use Raster.ANIMATION
 use Raster.COLOUR_MAP
 use Raster.IMAGE

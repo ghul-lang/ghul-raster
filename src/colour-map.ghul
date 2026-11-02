@@ -1,5 +1,4 @@
 namespace Raster is
-    use Math = System.Math
 
     // Colours for values, each map taking a number from 0 to 1 to a colour
     // `IMAGE.colour` accepts, so a heat map colours every cell alike rather
@@ -36,10 +35,10 @@ namespace Raster is
         // to red at 1, for a value that wraps: an angle, a phase, a
         // remainder. A value outside 0 to 1 wraps round the wheel with it.
         hue(value: double) -> (red: ubyte, green: ubyte, blue: ubyte) static =>
-            (let turn = value - Math.floor(value)
+            (let turn = value - Ghul.Math.floor(value)
              let sixths = turn * 6.0D
-             let sector = cast int(Math.floor(sixths)) % 6
-             let rising = sixths - Math.floor(sixths)
+             let sector = cast int(Ghul.Math.floor(sixths)) % 6
+             let rising = sixths - Ghul.Math.floor(sixths)
              let falling = 1.0D - rising
 
              case sector
@@ -76,7 +75,7 @@ namespace Raster is
                  if !(value > 0.0D) then 0.0D elif value > 1.0D then 1.0D else value fi
 
              let position = clamped * cast double(stops.count - 1)
-             let below = cast int(Math.floor(position))
+             let below = cast int(Ghul.Math.floor(position))
              let at = if below >= stops.count - 1 then stops.count - 2 else below fi
              let part = position - cast double(at)
 

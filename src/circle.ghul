@@ -1,5 +1,4 @@
 namespace Raster is
-    use Math = System.Math
 
     // Circles, discs and arcs, centred and sized in user coordinates. A view
     // that scales x and y differently draws each of them as an ellipse, as it
@@ -34,17 +33,17 @@ namespace Raster is
 
             let low = from
             let span =
-                if Math.abs(to - from) >= 360.0D then
+                if Ghul.Math.abs(to - from) >= 360.0D then
                     360.0D
                 else
-                    (to - from) - 360.0D * Math.floor((to - from) / 360.0D)
+                    (to - from) - 360.0D * Ghul.Math.floor((to - from) / 360.0D)
                 fi
 
             let cx = _to_pixel_x(x, y)
             let cy = _to_pixel_y(x, y)
 
-            let across = radius * Math.sqrt(_xx * _xx + _xy * _xy)
-            let down = radius * Math.sqrt(_yx * _yx + _yy * _yy)
+            let across = radius * Ghul.Math.sqrt(_xx * _xx + _xy * _xy)
+            let down = radius * Ghul.Math.sqrt(_yx * _yx + _yy * _yy)
 
             let half = _stroke / 2.0D
             let reach = if filled then 1.0D else half + 1.0D fi
@@ -52,8 +51,8 @@ namespace Raster is
             let first = _arc_end(x, y, radius, low)
             let last = _arc_end(x, y, radius, low + span)
 
-            for py in cast int(Math.floor(cy - down - reach))::cast int(Math.ceiling(cy + down + reach)) do
-                for px in cast int(Math.floor(cx - across - reach))::cast int(Math.ceiling(cx + across + reach)) do
+            for py in cast int(Ghul.Math.floor(cy - down - reach))::cast int(Ghul.Math.ceiling(cy + down + reach)) do
+                for px in cast int(Ghul.Math.floor(cx - across - reach))::cast int(Ghul.Math.ceiling(cx + across + reach)) do
                     let edge =
                         _edge_distance(
                             cast double(px) + 0.5D - cx,
@@ -66,7 +65,7 @@ namespace Raster is
                     else
                         let away =
                             if span >= 360.0D \/ _within(edge.angle, low, span) then
-                                Math.abs(edge.signed)
+                                Ghul.Math.abs(edge.signed)
                             else
                                 _least(
                                     _point_distance(px, py, first),
@@ -92,31 +91,31 @@ namespace Raster is
              let ux = (_yy * dx - _yx * dy) / determinant / radius
              let uy = (_xx * dy - _xy * dx) / determinant / radius
 
-             let f = Math.sqrt(ux * ux + uy * uy)
+             let f = Ghul.Math.sqrt(ux * ux + uy * uy)
 
              if f < 0.000000001D then
-                 (signed = -radius * Math.abs(_xx), angle = 0.0D)
+                 (signed = -radius * Ghul.Math.abs(_xx), angle = 0.0D)
              else
                  (let gx = (_yy * ux - _xy * uy) / determinant / (radius * f)
                   let gy = (_xx * uy - _yx * ux) / determinant / (radius * f)
 
-                  (signed = (f - 1.0D) / Math.sqrt(gx * gx + gy * gy),
-                   angle = Math.atan2(uy, ux) * 180.0D / Math.pi))
+                  (signed = (f - 1.0D) / Ghul.Math.sqrt(gx * gx + gy * gy),
+                   angle = Ghul.Math.atan2(uy, ux) * 180.0D / Ghul.Math.pi))
              fi)
 
         _within(angle: double, low: double, span: double) -> bool static =>
             (let past = angle - low
 
-             past - 360.0D * Math.floor(past / 360.0D) <= span)
+             past - 360.0D * Ghul.Math.floor(past / 360.0D) <= span)
 
         _arc_end(
             x: double, y: double, radius: double, degrees: double
         ) -> (x: double, y: double) =>
-            (let turned = degrees * Math.pi / 180.0D
+            (let turned = degrees * Ghul.Math.pi / 180.0D
 
              to_pixel(
-                 x + radius * Math.cos(turned),
-                 y + radius * Math.sin(turned)
+                 x + radius * Ghul.Math.cos(turned),
+                 y + radius * Ghul.Math.sin(turned)
              ))
 
         _point_distance(
@@ -125,6 +124,6 @@ namespace Raster is
             (let dx = cast double(px) + 0.5D - point.x
              let dy = cast double(py) + 0.5D - point.y
 
-             Math.sqrt(dx * dx + dy * dy))
+             Ghul.Math.sqrt(dx * dx + dy * dy))
     si
 si

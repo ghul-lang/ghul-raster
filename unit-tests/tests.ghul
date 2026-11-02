@@ -2,7 +2,6 @@ namespace Raster.Tests is
     use TestClass = Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute
     use Test = Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute
     use Ghul.Pipes
-    use Math = System.Math
 
     entry()
 
@@ -155,8 +154,8 @@ namespace Raster.Tests is
             turtle.face(90.0D)
             turtle.forward(5.0D)
 
-            assert Math.abs(turtle.x - 10.0D) < 0.000001D
-            assert Math.abs(turtle.y - 15.0D) < 0.000001D
+            assert Ghul.Math.abs(turtle.x - 10.0D) < 0.000001D
+            assert Ghul.Math.abs(turtle.y - 15.0D) < 0.000001D
         si
 
         @Test()
@@ -166,7 +165,7 @@ namespace Raster.Tests is
             turtle.turn(90.0D)
             turtle.turn(45.0D)
 
-            assert Math.abs(turtle.heading - 135.0D) < 0.000001D
+            assert Ghul.Math.abs(turtle.heading - 135.0D) < 0.000001D
         si
 
         @Test()
@@ -193,7 +192,7 @@ namespace Raster.Tests is
             assert !_marked(skipped, 20, 20)
                 else "the lifted turtle drew anyway"
 
-            assert Math.abs(lifted.x - 35.0D) < 0.000001D
+            assert Ghul.Math.abs(lifted.x - 35.0D) < 0.000001D
                 else "the lifted turtle did not move"
         si
 
@@ -689,21 +688,21 @@ namespace Raster.Tests is
         Left_text_starts_at_its_position() is
             let drawn = _drawn(Anchor.LEFT)
 
-            assert Math.abs(drawn.left - 100) <= 4 else "starts at {drawn.left}"
+            assert Ghul.Math.abs(drawn.left - 100) <= 4 else "starts at {drawn.left}"
         si
 
         @Test()
         Right_text_ends_at_its_position() is
             let drawn = _drawn(Anchor.RIGHT)
 
-            assert Math.abs(drawn.right - 100) <= 4 else "ends at {drawn.right}"
+            assert Ghul.Math.abs(drawn.right - 100) <= 4 else "ends at {drawn.right}"
         si
 
         @Test()
         Centred_text_straddles_its_position() is
             let drawn = _drawn(Anchor.CENTRE)
 
-            assert Math.abs(drawn.left + drawn.right - 200) <= 2
+            assert Ghul.Math.abs(drawn.left + drawn.right - 200) <= 2
                 else "runs from {drawn.left} to {drawn.right}"
         si
 
@@ -1105,7 +1104,7 @@ namespace Raster.Tests is
                 let b = expected[at]
 
                 for shift in [0, 8, 16] do
-                    assert Math.abs(((a >> shift) & 0xFF) - ((b >> shift) & 0xFF)) < 24
+                    assert Ghul.Math.abs(((a >> shift) & 0xFF) - ((b >> shift) & 0xFF)) < 24
                         else "pixel {at} strayed from {b} to {a}"
                 od
             od

@@ -1,5 +1,4 @@
 namespace Raster is
-    use Math = System.Math
 
     // A pen on an image, at a position and a heading, told how far to go
     // rather than where to go. A curve stated as a sequence of turns and
@@ -31,7 +30,7 @@ namespace Raster is
         x: double => _x
         y: double => _y
 
-        heading: double => _heading * 180.0D / Math.pi
+        heading: double => _heading * 180.0D / Ghul.Math.pi
 
         // Puts the pen down at a position without drawing on the way.
         move_to(x: double, y: double) is
@@ -40,11 +39,11 @@ namespace Raster is
         si
 
         face(degrees: double) is
-            _heading = degrees * Math.pi / 180.0D
+            _heading = degrees * Ghul.Math.pi / 180.0D
         si
 
         turn(degrees: double) is
-            _heading = _heading + degrees * Math.pi / 180.0D
+            _heading = _heading + degrees * Ghul.Math.pi / 180.0D
         si
 
         // Lifts the pen, so moving leaves no line until `pen_down`.
@@ -57,8 +56,8 @@ namespace Raster is
         si
 
         forward(distance: double) is
-            let to_x = _x + distance * Math.cos(_heading)
-            let to_y = _y + distance * Math.sin(_heading)
+            let to_x = _x + distance * Ghul.Math.cos(_heading)
+            let to_y = _y + distance * Ghul.Math.sin(_heading)
 
             if _drawing then
                 _image.line(_x, _y, to_x, to_y)

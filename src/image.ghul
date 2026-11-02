@@ -1,7 +1,6 @@
 namespace Raster is
     use Collections.LIST
     use Ghul.Pipes
-    use Math = System.Math
 
     // A truecolour image, drawn into with strokes and written as a PNG.
     //
@@ -282,7 +281,7 @@ namespace Raster is
              let near_x = x0 + along * dx
              let near_y = y0 + along * dy
 
-             Math.sqrt((x - near_x) * (x - near_x) + (y - near_y) * (y - near_y)))
+             Ghul.Math.sqrt((x - near_x) * (x - near_x) + (y - near_y) * (y - near_y)))
 
         line(x0: double, y0: double, x1: double, y1: double) is
             _stroke_pixels(
@@ -346,8 +345,8 @@ namespace Raster is
                     let crossings = _crossings(xs, ys, at)
 
                     if crossings.count >= 2 then
-                        first = Math.min(first, _clamp(crossings[0], 0, width))
-                        last = Math.max(last, _clamp(crossings[crossings.count - 1] + 1.0D, 0, width))
+                        first = Ghul.Math.min(first, _clamp(crossings[0], 0, width))
+                        last = Ghul.Math.max(last, _clamp(crossings[crossings.count - 1] + 1.0D, 0, width))
                     fi
 
                     let index mut = 0
@@ -376,7 +375,7 @@ namespace Raster is
             if a > b then a else b fi
 
         _clamp(value: double, low: int, high: int) -> int static =>
-            (let at = cast int(Math.floor(value))
+            (let at = cast int(Ghul.Math.floor(value))
 
              if at < low then low elif at > high then high else at fi)
 
@@ -415,7 +414,7 @@ namespace Raster is
                 return
             fi
 
-            for x in cast int(Math.floor(left))..cast int(Math.ceiling(right)) do
+            for x in cast int(Ghul.Math.floor(left))..cast int(Ghul.Math.ceiling(right)) do
                 let within =
                     _least(right, cast double(x + 1)) -
                     _most(left, cast double(x))
@@ -656,10 +655,10 @@ namespace Raster is
             let half = weight / 2.0D
             let reach = half + 1.0D
 
-            let left = cast int(Math.floor(Math.min(x0, x1) - reach))
-            let right = cast int(Math.ceiling(Math.max(x0, x1) + reach))
-            let top = cast int(Math.floor(Math.min(y0, y1) - reach))
-            let bottom = cast int(Math.ceiling(Math.max(y0, y1) + reach))
+            let left = cast int(Ghul.Math.floor(Ghul.Math.min(x0, x1) - reach))
+            let right = cast int(Ghul.Math.ceiling(Ghul.Math.max(x0, x1) + reach))
+            let top = cast int(Ghul.Math.floor(Ghul.Math.min(y0, y1) - reach))
+            let bottom = cast int(Ghul.Math.ceiling(Ghul.Math.max(y0, y1) + reach))
 
             // A short stroke, such as one of a letter's, is quicker to scan
             // whole than to work out the span of each row.
@@ -678,9 +677,9 @@ namespace Raster is
                 fi
 
                 let first =
-                    Math.max(left, cast int(Math.floor(Math.max(row.from, cast double(left)))) - 1)
+                    Ghul.Math.max(left, cast int(Ghul.Math.floor(Ghul.Math.max(row.from, cast double(left)))) - 1)
                 let last =
-                    Math.min(right, cast int(Math.ceiling(Math.min(row.to, cast double(right)))) + 1)
+                    Ghul.Math.min(right, cast int(Ghul.Math.ceiling(Ghul.Math.min(row.to, cast double(right)))) + 1)
 
                 for x in first::last do
                     let away =
@@ -702,11 +701,11 @@ namespace Raster is
         ) -> (from: double, to: double) static =>
             (let off = y - end_y
 
-             if Math.abs(off) < limit then
-                 (let across = Math.sqrt(limit * limit - off * off)
+             if Ghul.Math.abs(off) < limit then
+                 (let across = Ghul.Math.sqrt(limit * limit - off * off)
 
-                  (from = Math.min(span.from, x - across),
-                   to = Math.max(span.to, x + across)))
+                  (from = Ghul.Math.min(span.from, x - across),
+                   to = Ghul.Math.max(span.to, x + across)))
              else
                  span
              fi)
@@ -734,7 +733,7 @@ namespace Raster is
              let square = dx * dx + dy * dy
 
              if square > 0.0D then
-                 let length = Math.sqrt(square)
+                 let length = Ghul.Math.sqrt(square)
                  let off = y - y0
 
                  let band =
@@ -742,8 +741,8 @@ namespace Raster is
                          (let a = x0 + (off * dx - limit * length) / dy
                           let b = x0 + (off * dx + limit * length) / dy
 
-                          (from = Math.min(a, b), to = Math.max(a, b)))
-                     elif Math.abs(off * dx) / length < limit then
+                          (from = Ghul.Math.min(a, b), to = Ghul.Math.max(a, b)))
+                     elif Ghul.Math.abs(off * dx) / length < limit then
                          (from = -1.0e300D, to = 1.0e300D)
                      else
                          (from = 1.0e300D, to = -1.0e300D)
@@ -754,19 +753,19 @@ namespace Raster is
                          (let a = x0 - off * dy / dx
                           let b = x0 + (square - off * dy) / dx
 
-                          (from = Math.min(a, b), to = Math.max(a, b)))
+                          (from = Ghul.Math.min(a, b), to = Ghul.Math.max(a, b)))
                      elif off * dy >= 0.0D /\ off * dy <= square then
                          (from = -1.0e300D, to = 1.0e300D)
                      else
                          (from = 1.0e300D, to = -1.0e300D)
                      fi
 
-                 let inside_from = Math.max(band.from, slab.from)
-                 let inside_to = Math.min(band.to, slab.to)
+                 let inside_from = Ghul.Math.max(band.from, slab.from)
+                 let inside_to = Ghul.Math.min(band.to, slab.to)
 
                  if inside_from <= inside_to then
-                     from = Math.min(from, inside_from)
-                     to = Math.max(to, inside_to)
+                     from = Ghul.Math.min(from, inside_from)
+                     to = Ghul.Math.max(to, inside_to)
                  fi
              fi
 
