@@ -1,0 +1,10 @@
+{
+    "name": "reads-a-png",
+    "kind": "program",
+    "targets": ["wasm", "llvm"],
+    "sources": ["*.ghul"],
+    "dependencies": {
+        "ghul-runtime": { "version": ">=0.0.0" },
+        "ghul-raster": { "path": "../.." }
+    }
+}
