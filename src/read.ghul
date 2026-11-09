@@ -10,15 +10,13 @@ namespace Raster is
     // An IMAGE carries no alpha of its own, so a transparent pixel is
     // composited onto the white an image starts as.
     partial IMAGE is
-        /// The PNG at `path`. On the wasm and llvm targets, reading a PNG is not
-        /// supported yet and throws `Ghul.NotSupportedException`.
+        /// The PNG at `path`, on every target.
         ///
         /// - path: the file to read
         read(path: string) -> IMAGE static =>
             decode(IO.File.read_all_bytes(path))
 
-        /// The PNG `bytes` hold. On the wasm and llvm targets, reading a PNG is
-        /// not supported yet and throws `Ghul.NotSupportedException`.
+        /// The PNG `bytes` hold, on every target.
         ///
         /// - bytes: the whole file
         decode(bytes: ARRAY[ubyte]) -> IMAGE static is
