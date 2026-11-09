@@ -1,0 +1,18 @@
+use Raster.IMAGE
+use IO.Std.write_line
+
+// A PNG another tool wrote, read back: its deflate stream uses dynamic
+// Huffman codes as well as the fixed ones, which a target whose core library
+// has no compression of its own decompresses in ghūl.
+let image = IMAGE.read("pentagon.png")
+
+let total mut = 0L
+
+for y in 0..image.height do
+    for x in 0..image.width do
+        let (red, green, blue) = image.pixel(x, y)
+        total = total + cast long(red) + cast long(green) * 3L + cast long(blue) * 7L
+    od
+od
+
+write_line("{image.width} x {image.height}, weighted sum {total}")
