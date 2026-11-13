@@ -151,15 +151,15 @@ namespace Raster is
 
             let frequent = colors
                 |> filter(color => cast long(counts[color]) * 1000L >= total)
-                |> collect_mutable()
+                |> LIST()
 
             frequent.sort((a, b) => counts[b] - counts[a])
 
-            let kept = frequent |> take(128) |> collect_mutable()
+            let kept = frequent |> take(128) |> LIST()
 
             kept.sort()
 
-            let rest = colors |> filter(color => !kept.contains(color)) |> collect_mutable()
+            let rest = colors |> filter(color => !kept.contains(color)) |> LIST()
             let slots = 256 - kept.count
 
             if rest.count <= slots then

@@ -60,12 +60,12 @@ namespace Raster is
                 let xs =
                     (0..points.count)
                         |> map(at => _to_pixel_x(points[at].x, points[at].y))
-                        |> collect()
+                        |> ARRAY()
 
                 let ys =
                     (0..points.count)
                         |> map(at => _to_pixel_y(points[at].x, points[at].y))
-                        |> collect()
+                        |> ARRAY()
 
                 let first =
                     if points.count < 3 then height else _clamp(ys |> reduce(ys[0], _least), 0, height) fi
@@ -79,11 +79,11 @@ namespace Raster is
                 bottom = Ghul.Math.max(bottom, last)
             od
 
-            let coverage = repeat(0.0D, width) |> collect_mutable()
-            let total = repeat(0.0D, width) |> collect_mutable()
-            let red = repeat(0.0D, width) |> collect_mutable()
-            let green = repeat(0.0D, width) |> collect_mutable()
-            let blue = repeat(0.0D, width) |> collect_mutable()
+            let coverage = repeat(0.0D, width) |> LIST()
+            let total = repeat(0.0D, width) |> LIST()
+            let red = repeat(0.0D, width) |> LIST()
+            let green = repeat(0.0D, width) |> LIST()
+            let blue = repeat(0.0D, width) |> LIST()
 
             for y in top..bottom do
                 let row_first mut = width

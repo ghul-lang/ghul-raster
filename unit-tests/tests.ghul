@@ -34,7 +34,7 @@ namespace Raster.Tests is
                                 image.pixel(x, y) !~
                                     (red = 255ub, green = 255ub, blue = 255ub))
                             |> count() > 0)
-                    |> collect()
+                    |> ARRAY()
 
             assert rows[0] >= 29 /\ rows[0] <= 30 else "top at {rows[0]}"
             assert rows[rows.count - 1] >= 69 /\ rows[rows.count - 1] <= 70
@@ -672,7 +672,7 @@ namespace Raster.Tests is
                                  image.pixel(x, y) !~
                                      (red = 255ub, green = 255ub, blue = 255ub))
                              |> count() > 0)
-                     |> collect()
+                     |> ARRAY()
 
              (left = columns[0], right = columns[columns.count - 1]))
 
@@ -961,7 +961,7 @@ namespace Raster.Tests is
                      at = at + 1
 
                      frames.add(
-                         _lzw(data, minimum) |> map(index => palette[index]) |> collect_mutable())
+                         _lzw(data, minimum) |> map(index => palette[index]) |> Collections.LIST())
                  fi
              od
 
@@ -1017,7 +1017,7 @@ namespace Raster.Tests is
                      if code < table.count then
                          table[code]
                      elif let before = previous then
-                         before |> cat([before[0]]) |> collect_mutable()
+                         before |> cat([before[0]]) |> Collections.LIST()
                      else
                          throw System.Exception("code {code} before any entry")
                      fi
@@ -1028,7 +1028,7 @@ namespace Raster.Tests is
 
                  if let before = previous then
                      if table.count < 4096 then
-                         table.add(before |> cat([entry[0]]) |> collect_mutable())
+                         table.add(before |> cat([entry[0]]) |> Collections.LIST())
                      fi
                  fi
 
@@ -1049,7 +1049,7 @@ namespace Raster.Tests is
                      (cast int(rgb[at * 3]) << 16) |
                      (cast int(rgb[at * 3 + 1]) << 8) |
                      cast int(rgb[at * 3 + 2]))
-                 |> collect_mutable())
+                 |> Collections.LIST())
 
         @Test()
         Few_colors_come_back_exactly() is
@@ -1404,7 +1404,7 @@ namespace Raster.Tests is
 
             let axes = AXES(given)
 
-            axes.x_ticks((1::9) |> map(digit => (value = cast double(digit), label = "{digit}")) |> collect_mutable())
+            axes.x_ticks((1::9) |> map(digit => (value = cast double(digit), label = "{digit}")) |> Collections.LIST())
             axes.draw()
 
             let differs =
@@ -1449,9 +1449,9 @@ namespace Raster.Tests is
             [
                 Collections.LIST[ubyte]().to_array(),
                 [42ub],
-                (0..100_000) |> map(i => cast ubyte(i % 7)) |> collect(),
-                (0..50_000) |> map(i => cast ubyte((i * 7919 + i / 3) % 251)) |> collect(),
-                (0..70_000) |> map(i => if i % 1000 < 900 then 255ub else cast ubyte(i % 256) fi) |> collect()
+                (0..100_000) |> map(i => cast ubyte(i % 7)) |> ARRAY(),
+                (0..50_000) |> map(i => cast ubyte((i * 7919 + i / 3) % 251)) |> ARRAY(),
+                (0..70_000) |> map(i => if i % 1000 < 900 then 255ub else cast ubyte(i % 256) fi) |> ARRAY()
             ]
 
         _platform_decompress(data: ARRAY[ubyte]) -> ARRAY[ubyte] static is
@@ -1480,7 +1480,7 @@ namespace Raster.Tests is
 
         @Test()
         Repetitive_data_compresses() is
-            let sample = (0..100_000) |> map(i => cast ubyte(i % 7)) |> collect()
+            let sample = (0..100_000) |> map(i => cast ubyte(i % 7)) |> ARRAY()
 
             assert DEFLATE.compress(sample).count < 2_000
         si

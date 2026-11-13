@@ -189,7 +189,7 @@ namespace Raster is
             else
                 (let values = ticks(low, high, _most(pixels, spacing))
 
-                 values |> map(value => (value = value, label = label(value, values))) |> collect_mutable())
+                 values |> map(value => (value = value, label = label(value, values))) |> LIST())
             fi
 
         // A row of the key in the top right corner inside the frame: a
@@ -257,7 +257,7 @@ namespace Raster is
                 found.add(cast double(index) * spacing)
             od
 
-            return found |> collect()
+            return found |> ARRAY()
         si
 
         // The distance between ticks that `ticks` chooses.
