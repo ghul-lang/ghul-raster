@@ -83,7 +83,7 @@ namespace Raster is
             string(
                 (at + 4..at + 8)
                     |> map(index => cast char(bytes[index]))
-                    |> collect()
+                    |> ARRAY()
             )
 
         // Walks the chunks, calling back with the kind of each and where
@@ -182,7 +182,7 @@ namespace Raster is
                 fi
             si)
 
-            return compressed |> collect()
+            return compressed |> ARRAY()
         si
 
         palette(bytes: ARRAY[ubyte]) -> ARRAY[ubyte] static is
@@ -196,7 +196,7 @@ namespace Raster is
                 fi
             si)
 
-            return entries |> collect()
+            return entries |> ARRAY()
         si
 
         from_palette(
@@ -347,7 +347,7 @@ namespace Raster is
                 od
             od
 
-            return out |> collect()
+            return out |> ARRAY()
         si
 
         // Compressed pixels for a width by height rectangle, drawn onto an
