@@ -1,5 +1,5 @@
 namespace Raster is
-    use System.Exception
+    use Ghul.Exception
     use Collections.LIST
 
     /// Raw deflate streams (RFC 1951) decompressed in ghūl, for the

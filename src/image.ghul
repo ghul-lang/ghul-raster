@@ -150,7 +150,7 @@ namespace Raster is
 
         @IF.dotnet()
         _white(count: int) -> LIST[ubyte] static is
-            let white = System.GC.allocate_array[ubyte](count, false)
+            let white = Ghul.GC.allocate_array[ubyte](count, false)
 
             System.Array.fill(white, 255ub)
 
@@ -187,7 +187,7 @@ namespace Raster is
         // Every pixel set to one color, for painting a background.
         @IF.dotnet()
         clear(red: ubyte, green: ubyte, blue: ubyte) is
-            let row = System.GC.allocate_array[ubyte](width * 3, false)
+            let row = Ghul.GC.allocate_array[ubyte](width * 3, false)
 
             for x in 0..width do
                 System.MemoryExtensions.as_span(row, x * 3, 3).fill(red)
@@ -629,7 +629,7 @@ namespace Raster is
         // An image holding these pixels, laid out as `rgb` gives them.
         from_rgb(width: int, height: int, rgb: ARRAY[ubyte]) -> IMAGE static is
             if rgb.count != width * height * 3 then
-                throw System.ArgumentException(
+                throw Ghul.ArgumentException(
                     "{rgb.count} bytes are not a {width} by {height} image"
                 )
             fi

@@ -34,7 +34,7 @@ namespace Raster is
         // next frame. The image has to be the animation's size.
         add(image: IMAGE, delay: int) is
             if image.width != width \/ image.height != height then
-                throw System.ArgumentException(
+                throw Ghul.ArgumentException(
                     "a {image.width} by {image.height} frame does not fit a {width} by {height} animation"
                 )
             fi
@@ -58,7 +58,7 @@ namespace Raster is
         // carry a sequence number shared with the control chunks.
         encode() -> ARRAY[ubyte] =>
             (if _frames.count == 0 then
-                 throw System.InvalidOperationException("an animation needs at least one frame")
+                 throw Ghul.InvalidOperationException("an animation needs at least one frame")
              fi
 
              let out = IO.MemoryStream()

@@ -15,7 +15,7 @@ namespace Raster is
 
         encode_gif() -> ARRAY[ubyte] =>
             (if _frames.count == 0 then
-                 throw System.InvalidOperationException("an animation needs at least one frame")
+                 throw Ghul.InvalidOperationException("an animation needs at least one frame")
              fi
 
              let frames = LIST[ARRAY[ubyte]]()
