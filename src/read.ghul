@@ -1,5 +1,5 @@
 namespace Raster is
-    use System.Exception
+    use Ghul.Exception
     use Collections.LIST
     use Ghul.Pipes
 

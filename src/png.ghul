@@ -32,7 +32,7 @@ namespace Raster is
         @IF.dotnet()
         scanlines(rgb: ARRAY[ubyte], width: int, height: int) -> ARRAY[ubyte] static =>
             (let stride = width * 3
-             let raw = System.GC.allocate_array[ubyte](height * (stride + 1), false)
+             let raw = Ghul.GC.allocate_array[ubyte](height * (stride + 1), false)
 
              for y in 0..height do
                  System.MemoryExtensions

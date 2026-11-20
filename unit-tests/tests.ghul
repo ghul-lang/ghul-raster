@@ -824,7 +824,7 @@ namespace Raster.Tests is
                 animation.add(IMAGE(10, 20), 100)
 
                 assert false else "a narrower frame was accepted"
-            catch _: System.ArgumentException
+            catch _: Ghul.ArgumentException
             yrt
         si
 
@@ -1019,7 +1019,7 @@ namespace Raster.Tests is
                      elif let before = previous then
                          before |> cat([before[0]]) |> Collections.LIST()
                      else
-                         throw System.Exception("code {code} before any entry")
+                         throw Ghul.Exception("code {code} before any entry")
                      fi
 
                  for index in entry do
@@ -1159,7 +1159,7 @@ namespace Raster.Tests is
         A_large_frame_runs_the_code_table_full_and_clears_it() is
             let animation = ANIMATION(200, 150)
             let image = IMAGE(200, 150)
-            let random = System.Random(7)
+            let random = Ghul.Random(7)
 
             for y in 0..150 do
                 for x in 0..200 do
